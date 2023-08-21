@@ -61,10 +61,12 @@ class User extends Authenticatable
         return $this->hasManyThrough(Like::class, Post::class);
     }//access many Like Through Post   
     public function followers(){
-    return $this->hasMany(self::class);
-
+        return $this->hasMany(self::class);
     }
 
+    public function followings(){
+        return $this->belongsToMany(self::class);
     }
+}
     
 
