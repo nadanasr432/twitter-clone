@@ -21,9 +21,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('likes', function (Blueprint $table) {
-            $table->dropSoftDeletes();
+        // Schema::table('likes', function (Blueprint $table) {
+        //     $table->dropSoftDeletes();
        
-        });
+        // });
     }
 };

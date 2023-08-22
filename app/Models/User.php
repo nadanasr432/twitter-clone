@@ -53,13 +53,11 @@ class User extends Authenticatable
     
     public function likes()
     {
-        return $this->hasMany(Like::class); // OneTo Many has many child
+        return $this->belongsToMany(self::class,'likes','post_id'); // OneTo Many has many child
     }
+    
    
-   public function receivedLikes()
-   {
-        return $this->hasMany(Like::class, Post::class);
-    }
+   
     //access many Like Through Post   
     public function followers(){
         return $this->belongsToMany(self::class,'followers','follower_id', 'following_id' );
@@ -67,6 +65,10 @@ class User extends Authenticatable
 
     public function followings(){
         return $this->belongsToMany(self::class,'followers', 'following_id','follower_id' );
+    }
+    public function isFollowing(User $user)
+    {
+        return !is_null($this->followings()->where('follower_id', $user->id)->first());
     }
 }
     

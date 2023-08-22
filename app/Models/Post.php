@@ -27,6 +27,6 @@ class Post extends Model
 
      public function likes()
      {
-       return $this->hasMany(Like::class);//many to many
+       return $this->belongsToMany(User::class,'likes','user_id','post_id');//many to many
     }
 }
