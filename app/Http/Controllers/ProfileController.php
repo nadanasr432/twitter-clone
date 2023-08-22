@@ -8,6 +8,14 @@ use App\Models\User;
 
 class ProfileController extends Controller
 {
+    public function ShowFollowers(User $user){
+         return view('profile.followers',[
+            'user'=>$user,]);
+    }
+    public function ShowFollowings(User $user){
+         return view('profile.followings',[
+            'user'=>$user,]);
+    }
      public function edit(User $user)
     {
         

@@ -35,7 +35,8 @@ Route::get('/register',[RegisterController::class,'index'])->name('register');
 Route::post('/register',[RegisterController::class,'store']);
 Route::get('/register/edit',[ProfileController::class ,'edit'])->name('profile.edit');
 Route::put('/register/update',[ProfileController::class ,'update'])->name('profile.update');
-
+Route::get('/profileFollowers',[ProfileController::class,'ShowFollowers'])->name('profile.followers');
+Route::get('/profileFollowings',[ProfileController::class,'ShowFollowings'])->name('profile.followings');
 Route::get('/login',[LoginController::class,'index'])->name('login');
 
 Route::post('/login',[LoginController::class,'store']);

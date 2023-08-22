@@ -116,12 +116,36 @@
                             </svg> <span class="leading-5 ml-1">{{ $user->created_at->diffForHumans() }}</span></span>
                     </div>
                 </div>
+                {{-- <a href="/_nadoshaa/followers" dir="ltr" role="link"
+                    class="css-4rbku5 css-18t94o4 css-901oao r-18jsvk2 r-1loqt21 r-37j5jr r-a023e6 r-16dba41 r-rjixqe r-bcqeeo r-qvutc0"><span
+                        class="css-901oao css-16my406 r-18jsvk2 r-poiln3 r-1b43r93 r-b88u0q r-1cwl3u0 r-bcqeeo r-qvutc0"><span
+                            class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">3,408</span></span> <span
+                        class="css-901oao css-16my406 r-14j79pv r-poiln3 r-1b43r93 r-1cwl3u0 r-bcqeeo r-qvutc0"><span
+                            class="css-901oao css-16my406 r-poiln3 r-bcqeeo r-qvutc0">Followers</span></span></a>
+                <div class="pt-3 flex justify-start items-start w-full divide-x divide-gray-800 divide-solid"> --}}
                 <div class="pt-3 flex justify-start items-start w-full divide-x divide-gray-800 divide-solid">
                     <div class="text-center pr-3"><span
                             class="font-bold text-white">{{ $user->followers->count() }}</span><span class="text-gray-600">
-                            Following</span></div>
+                            <span class="text-gray-600"><a href="{{ route('profile.followings') }}"
+                                    class="inline-flex items-center transition-colors duration-300 ease-in focus:outline-none hover:text-blue-400 focus:text-blue-400 rounded-r-full px-4 py-2"
+                                    id="list">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" class="fill-current w-4 h-4 mr-2">
+                                    </svg>
+                                    <span>Followings</span>
+                                </a></span>
+                    </div>
                     <div class="text-center px-3"><span class="font-bold text-white">{{ $user->followings->count() }}
-                        </span><span class="text-gray-600"> Followers</span></div>
+                        </span><span class="text-gray-600"><a href="{{ route('profile.followers') }}"
+                                class="inline-flex items-center transition-colors duration-300 ease-in focus:outline-none hover:text-blue-400 focus:text-blue-400 rounded-r-full px-4 py-2"
+                                id="list">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                    stroke-linecap="round" stroke-linejoin="round" class="fill-current w-4 h-4 mr-2">
+                                </svg>
+                                <span>Followers</span>
+                            </a></span></div>
                 </div>
             </div>
         </div>
