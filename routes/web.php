@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\FollowerController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PostLikeController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserPostController;
 
 /*
@@ -32,6 +33,8 @@ Route::get('/', function () {
 Route::get('/register',[RegisterController::class,'index'])->name('register');
 
 Route::post('/register',[RegisterController::class,'store']);
+Route::get('/register/edit',[ProfileController::class ,'edit'])->name('profile.edit');
+Route::put('/register/update',[ProfileController::class ,'update'])->name('profile.update');
 
 Route::get('/login',[LoginController::class,'index'])->name('login');
 
@@ -40,6 +43,7 @@ Route::post('/login',[LoginController::class,'store']);
 Route::post('/logout',[LogoutController::class,'store'])->name('logout');
 
 Route::get('/users/{user:username}',[UserPostController::class,'index'])->name('users.post');
+Route::put('/users/{user:username}',[ProfileController::class,'update'])->name('users.post');
 Route::get('/dashboard',[DashboardController::class,'index'])->name('dashboard');
 
 

@@ -116,9 +116,11 @@
                 <div
                     class="flex-1 flex items-center text-white text-xs text-gray-400 hover:text-red-600 transition duration-350 ease-in-out">
 
-                    @if (!auth()->user()->likes($post))
+                    @if (!auth()->user()->likes($post->user))
                         {{-- (!$post->llikes(auth()->user())) --}}
-                        <form action="{{ route('posts.likes', $post) }}" method="post">
+                        <form
+                            class="w-12 mt-1 group flex items-center text-gray-500 px-3 py-2 text-base leading-6 font-medium rounded-full hover:bg-blue-800 hover:text-blue-300"
+                            action="{{ route('posts.likes', $post) }}" method="post" class="mr-1">
                             @csrf
                             <button type="submit"> <svg viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 mr-2">
                                     <g>
@@ -133,7 +135,7 @@
                             class="w-12 mt-1 group flex items-center text-gray-500 px-3 py-2 text-base leading-6 font-medium rounded-full hover:bg-blue-800 hover:text-blue-300"
                             action="{{ route('posts.likes', $post) }}" method="post" class="mr-1">
                             @csrf
-                            <button type="submit"> <svg class="text-center h-6 w-6" fill="red"
+                            <button type="submit"> <svg class="text-center h-6 w-6" fill="currentColor"
                                     stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="red"
                                     viewBox="0 0 24 24">
                                     <g>
@@ -144,7 +146,7 @@
                                 </svg> </button>
                         </form>
                     @endif
-                    <p> {{ $post->likes->count() }}</p>
+                    <span> {{ $post->likes->count() }}</span>
 
                 </div>
                 <div class="flex-1 text-center py-2 m-2">
