@@ -60,8 +60,8 @@
                 </div>
             </div>
             <div class="pt-3 flex justify-start items-start w-full divide-x divide-gray-800 divide-solid">
-                <div class="text-center pr-3"><span class="font-bold text-white">520</span><span class="text-gray-600"> Following</span></div>
-                <div class="text-center px-3"><span class="font-bold text-white">23,4m </span><span class="text-gray-600"> Followers</span></div>
+                <div class="text-center pr-3"><span class="font-bold text-white">{{ $user->followers->count() }}</span><span class="text-gray-600"> Following</span></div>
+                <div class="text-center px-3"><span class="font-bold text-white">{{ $user->followings->count() }} </span><span class="text-gray-600"> Followers</span></div>
             </div>
         </div>
     </div>

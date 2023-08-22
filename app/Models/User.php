@@ -49,23 +49,24 @@ class User extends Authenticatable
  public function posts()
     {
         return $this->hasMany(Post::class);
-     }
+    }
     
- public function likes()
+    public function likes()
     {
         return $this->hasMany(Like::class); // OneTo Many has many child
-   }
+    }
    
    public function receivedLikes()
    {
-        return $this->hasManyThrough(Like::class, Post::class);
-    }//access many Like Through Post   
+        return $this->hasMany(Like::class, Post::class);
+    }
+    //access many Like Through Post   
     public function followers(){
-        return $this->hasMany(self::class);
+        return $this->belongsToMany(self::class,'followers','follower_id', 'following_id' );
     }
 
     public function followings(){
-        return $this->belongsToMany(self::class);
+        return $this->belongsToMany(self::class,'followers', 'following_id','follower_id' );
     }
 }
     
