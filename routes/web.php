@@ -37,14 +37,13 @@ Route::get('/', function () {
     return view('home');
 })->name('home');
 
-
 Route::get('/profile/edit',[ProfileController::class ,'edit'])->name('profile.edit');
 Route::put('/profile/update',[ProfileController::class ,'update'])->name('profile.update');
 Route::get('/Followers/{user}',[FollowerController::class,'ShowFollowers'])->name('profile.followers');
 Route::get('/Followings/{user}',[FollowerController::class,'ShowFollowings'])->name('profile.followings');
+Route::post('follow-unfollow-user/{user}', [FollowerController::class, 'store'])->name('profile.follower');
+
 Route::get('/Users',[UsersController::class,'ShowUsers'])->name('profile.users');
-
-
 Route::get('/users/{user:username}',[UserPostController::class,'index'])->name('users.post');
 Route::put('/users/{user:username}',[ProfileController::class,'update'])->name('users.post');
 
@@ -52,15 +51,11 @@ Route::get('/posts', [PostController::class, 'index'])->name('posts');
 Route::get('/posts/{post}',[PostController::class, 'show'])->name('posts.show');
 Route::post('/posts', [PostController::class, 'store']);
 Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
-
 Route::post('/posts/{post}/likes', [PostLikeController::class, 'store'])->name('posts.likes');
 
-Route::post('follow-unfollow-user/{user}', [FollowerController::class, 'store'])->name('profile.follower');
-
+Route::get('/dashboard',[DashboardController::class,'index'])->name('dashboard')->withoutMiddleware([Authenticate::class]);
+Route::post('/logout',[LogoutController::class,'store'])->name('logout')->withoutMiddleware([Authenticate::class]);
 });
 
 
-
-Route::post('/logout',[LogoutController::class,'store'])->name('logout');
-Route::get('/dashboard',[DashboardController::class,'index'])->name('dashboard');
 
