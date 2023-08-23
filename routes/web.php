@@ -11,7 +11,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\PostLikeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserPostController;
-
+use App\Http\Middleware\Authenticate;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,36 +23,41 @@ use App\Http\Controllers\UserPostController;
 |
 */
 
-Route::get('/posts', function () {
-    return view('posts.index');
-});
-
-Route::get('/', function () {
-    return view('home');
-})->name('home');
 Route::get('/register',[RegisterController::class,'index'])->name('register');
-
 Route::post('/register',[RegisterController::class,'store']);
-Route::get('/register/edit',[ProfileController::class ,'edit'])->name('profile.edit');
-Route::put('/register/update',[ProfileController::class ,'update'])->name('profile.update');
-Route::get('/profileFollowers',[ProfileController::class,'ShowFollowers'])->name('profile.followers');
-Route::get('/profileFollowings',[ProfileController::class,'ShowFollowings'])->name('profile.followings');
+Route::post('/login',[LoginController::class,'store']);
 Route::get('/login',[LoginController::class,'index'])->name('login');
 
-Route::post('/login',[LoginController::class,'store']);
+
+
+Route::get('/posts', function () {
+    return view('posts.index');
+})->middleware(Authenticate::class);
+Route::get('/', function () {
+    return view('home');
+})->name('home')->middleware(Authenticate::class);
+
+
+Route::get('/profile/edit',[ProfileController::class ,'edit'])->name('profile.edit')->middleware(Authenticate::class);
+Route::put('/profile/update',[ProfileController::class ,'update'])->name('profile.update')->middleware(Authenticate::class);
+Route::get('/profileFollowers/{user}',[ProfileController::class,'ShowFollowers'])->name('profile.followers')->middleware(Authenticate::class);
+Route::get('/profileFollowings/{user}',[ProfileController::class,'ShowFollowings'])->name('profile.followings')->middleware(Authenticate::class);
+Route::get('/profileUsers/{user}',[ProfileController::class,'ShowUsers'])->name('profile.users')->middleware(Authenticate::class);
+
+
 
 Route::post('/logout',[LogoutController::class,'store'])->name('logout');
 
-Route::get('/users/{user:username}',[UserPostController::class,'index'])->name('users.post');
-Route::put('/users/{user:username}',[ProfileController::class,'update'])->name('users.post');
+Route::get('/users/{user:username}',[UserPostController::class,'index'])->name('users.post')->middleware(Authenticate::class);
+Route::put('/users/{user:username}',[ProfileController::class,'update'])->name('users.post')->middleware(Authenticate::class);
 Route::get('/dashboard',[DashboardController::class,'index'])->name('dashboard');
 
 
-Route::get('/posts', [PostController::class, 'index'])->name('posts');
-Route::get('/posts/{post}',[PostController::class, 'show'])->name('posts.show');
+Route::get('/posts', [PostController::class, 'index'])->name('posts')->middleware(Authenticate::class);
+Route::get('/posts/{post}',[PostController::class, 'show'])->name('posts.show')->middleware(Authenticate::class);
 Route::post('/posts', [PostController::class, 'store']);
-Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
+Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy')->middleware(Authenticate::class);
 
-Route::post('/posts/{post}/likes', [PostLikeController::class, 'store'])->name('posts.likes');
+Route::post('/posts/{post}/likes', [PostLikeController::class, 'store'])->name('posts.likes')->middleware(Authenticate::class);
 
-Route::post('follow-unfollow-user/{user}', [FollowerController::class, 'store'])->name('profile.follower');
+Route::post('follow-unfollow-user/{user}', [FollowerController::class, 'store'])->name('profile.follower')->middleware(Authenticate::class);

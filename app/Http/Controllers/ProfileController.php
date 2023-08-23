@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-
+use Illuminate\Support\Facades\Auth;
 class ProfileController extends Controller
 {
     public function ShowFollowers(User $user){
@@ -28,8 +28,17 @@ class ProfileController extends Controller
         'email' => 'required |email|max:255',
         'password' => 'required|confirmed'
         ]);
+         auth()->attempt([
+            'email' => $request->email,
+            'password' => $request->password
+        ]);
         $user->update($data);
         return redirect(route('users.post',auth()->user()))->with('success','profile updated successfully');
+    }
+    public function ShowUsers(){
+        $users = $users = User::all()->except(Auth::id());
+         return view('profile.users',['users'=>$users]);
+       
     }
 }
 
