@@ -21,6 +21,16 @@ class FollowerController extends Controller
         return redirect()->back();
 
     }
+    public function ShowFollowers(User $user){
+        $users=$user->followers()->get();
+        return view('profile.followers',['users'=>$users]);
+
+    }
+    public function ShowFollowings(User $user){
+       $users= $user->followings()->get();
+        return view('profile.followings',['users'=>$users]);
+
+    }
 
     }
 

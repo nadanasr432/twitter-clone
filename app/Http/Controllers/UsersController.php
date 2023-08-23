@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+class UsersController extends Controller
+{
+     public function ShowUsers(){
+         $users = User::all()->except(Auth::id());
+         return view('profile.users',['users'=>$users]);
+       
+    }
+    
+}

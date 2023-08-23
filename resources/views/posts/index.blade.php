@@ -29,13 +29,13 @@
                 src="https://pbs.twimg.com/profile_images/1121328878142853120/e-rpjoJi_bigger.png" alt="">
         </div>
         @auth
-        <form action="{{ route('posts') }}" method="post" class="mb-4" >
-            @csrf
-            @method('post')
-        <div class="flex-1 px-2 pt-2 mt-2">
-            <textarea name="body" id="body" class=" bg-transparent text-gray-400 font-medium text-lg w-full" rows="2"
+            <form action="{{ route('posts') }}" method="post" class="mb-4">
+                @csrf
+                @method('post')
+                <div class="flex-1 px-2 pt-2 mt-2">
+                    <textarea name="body" id="body" class=" bg-transparent text-gray-400 font-medium text-lg w-full" rows="2"
                         cols="50" placeholder="What's happening?"></textarea>
-            </div>
+                </div>
         </div>
         <!--middle creat tweet below icons-->
         <div class="flex">
@@ -99,15 +99,16 @@
                     class="bg-blue-400 mt-5 hover:bg-blue-600 text-white font-bold py-2 px-8 rounded-full mr-8 float-right">
                     Tweet
                 </button>
-              
 
-            
+
+
+            </div>
+
         </div>
-   
-    </div>
-</form>
-@endauth
-@if ($posts->count())
+        </form>
+    @endauth
+    <div>
+        @if ($posts->count())
             @foreach ($posts as $post)
                 <x-post :post="$post" />
             @endforeach
@@ -115,8 +116,8 @@
         @else
             <p>There are no posts</p>
         @endif
-    <hr class="border-blue-800 border-4">
-
+        <hr class="border-blue-800 border-4">
+    </div>
 
 
 

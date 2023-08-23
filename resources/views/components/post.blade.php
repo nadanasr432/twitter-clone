@@ -39,7 +39,7 @@
   @endif
   @endauth --}}
 
-@props(['post' => $post])
+@props(['post'])
 <!--first tweet start-->
 <div class="flex flex-shrink-0 p-4 pb-0">
     <a href="{{ route('users.post', $post->user) }}" class="flex-shrink-0 group block">

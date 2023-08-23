@@ -40,9 +40,9 @@ Route::get('/', function () {
 
 Route::get('/profile/edit',[ProfileController::class ,'edit'])->name('profile.edit')->middleware(Authenticate::class);
 Route::put('/profile/update',[ProfileController::class ,'update'])->name('profile.update')->middleware(Authenticate::class);
-Route::get('/profileFollowers/{user}',[ProfileController::class,'ShowFollowers'])->name('profile.followers')->middleware(Authenticate::class);
-Route::get('/profileFollowings/{user}',[ProfileController::class,'ShowFollowings'])->name('profile.followings')->middleware(Authenticate::class);
-Route::get('/profileUsers/{user}',[ProfileController::class,'ShowUsers'])->name('profile.users')->middleware(Authenticate::class);
+Route::get('/Followers/{user}',[FollowerController::class,'ShowFollowers'])->name('profile.followers')->middleware(Authenticate::class);
+Route::get('/Followings/{user}',[FollowerController::class,'ShowFollowings'])->name('profile.followings')->middleware(Authenticate::class);
+Route::get('/Users',[UsersController::class,'ShowUsers'])->name('profile.users')->middleware(Authenticate::class);
 
 
 

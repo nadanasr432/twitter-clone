@@ -110,7 +110,7 @@
                         </svg>
                         Bookmarks
                     </a>
-                    <a href="{{ route('profile.users', auth()->user()) }}"
+                    <a href="{{ route('profile.users') }}"
                         class="mt-1 group flex items-center px-2 py-2 text-base leading-6 font-medium rounded-full hover:bg-blue-800 hover:text-blue-300">
                         <svg class="mr-4 h-6 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round"
                             stroke-width="2" stroke="currentColor" viewBox="0 0 24 24">

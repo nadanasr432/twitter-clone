@@ -35,11 +35,7 @@ class ProfileController extends Controller
         $user->update($data);
         return redirect(route('users.post',auth()->user()))->with('success','profile updated successfully');
     }
-    public function ShowUsers(){
-        $users = $users = User::all()->except(Auth::id());
-         return view('profile.users',['users'=>$users]);
-       
-    }
+    
 }
 
 

@@ -125,8 +125,8 @@
                 <div class="pt-3 flex justify-start items-start w-full divide-x divide-gray-800 divide-solid"> --}}
                 <div class="pt-3 flex justify-start items-start w-full divide-x divide-gray-800 divide-solid">
                     <div class="text-center pr-3"><span
-                            class="font-bold text-white">{{ $user->followers->count() }}</span><span class="text-gray-600">
-                            <span class="text-gray-600"><a href="{{ route('profile.followings', $user) }}"
+                            class="font-bold text-white">{{ $user->followings->count() }}</span><span class="text-gray-600">
+                            <span class="text-gray-600"><a href="{{ route('profile.followings', $user->id) }}"
                                     class="inline-flex items-center transition-colors duration-300 ease-in focus:outline-none hover:text-blue-400 focus:text-blue-400 rounded-r-full px-4 py-2"
                                     id="list">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -136,8 +136,8 @@
                                     <span>Followings</span>
                                 </a></span>
                     </div>
-                    <div class="text-center px-3"><span class="font-bold text-white">{{ $user->followings->count() }}
-                        </span><span class="text-gray-600"><a href="{{ route('profile.followers', $user) }}"
+                    <div class="text-center px-3"><span class="font-bold text-white">{{ $user->followers->count() }}
+                        </span><span class="text-gray-600"><a href="{{ route('profile.followers', $user->id) }}"
                                 class="inline-flex items-center transition-colors duration-300 ease-in focus:outline-none hover:text-blue-400 focus:text-blue-400 rounded-r-full px-4 py-2"
                                 id="list">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
