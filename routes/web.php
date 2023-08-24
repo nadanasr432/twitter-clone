@@ -7,6 +7,7 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\FollowerController;
+use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PostLikeController;
 use App\Http\Controllers\ProfileController;
@@ -28,7 +29,7 @@ Route::post('/register',[RegisterController::class,'store']);
 Route::post('/login',[LoginController::class,'store']);
 Route::get('/login',[LoginController::class,'index'])->name('login');
 
-Route::middleware([Authenticate::class])->group(function () {
+Route::middleware(['auth'])->group(function () {
     
 Route::get('/posts', function () {
     return view('posts.index');
@@ -55,6 +56,8 @@ Route::post('/posts/{post}/likes', [PostLikeController::class, 'store'])->name('
 
 Route::get('/dashboard',[DashboardController::class,'index'])->name('dashboard')->withoutMiddleware([Authenticate::class]);
 Route::post('/logout',[LogoutController::class,'store'])->name('logout')->withoutMiddleware([Authenticate::class]);
+Route::get('PostImages/{id}', [PostController::class, 'PostImage']);
+
 });
 
 

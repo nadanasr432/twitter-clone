@@ -70,6 +70,9 @@ class User extends Authenticatable
     {
         return !is_null($this->followings()->where('follower_id', $user->id)->first());
     }
+     public function images(){
+        return $this->morphMany(Images::class,'imageable');
+    }
 }
     
 

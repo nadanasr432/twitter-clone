@@ -63,6 +63,9 @@
 <div class="pl-16">
     <p class="text-base width-auto font-medium text-white flex-shrink">
         {{ $post->body }}
+        @foreach ($post->images as $image)
+            <img src="{{ asset('images/' . $image->src) }}">
+        @endforeach
     </p>
 
 
@@ -115,7 +118,6 @@
                         </div> --}}
                 <div
                     class="flex-1 flex items-center text-white text-xs text-gray-400 hover:text-red-600 transition duration-350 ease-in-out">
-
                     @if (!auth()->user()->likes($post->user))
                         {{-- @if (!$post->likes(auth()->user())) --}}
                         <form
@@ -144,8 +146,6 @@
                                         </path>
                                     </g>
                                 </svg> </button>
-
-
                         </form>
                     @endif
                     <p>{{ $post->likes->count() }}

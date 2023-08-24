@@ -28,15 +28,24 @@ class PostController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request )
     {
         $this->validate($request, [
-            'body' => 'required'
+            'body' => 'nullable', 
+
+        ]);
+        // get Image Name ;
+        $imageName = time() .".". $request->src->extension();
+        $request->src->move(public_path('images'), $imageName);
+
+
+        $post = $request->user()->posts()->create($request->only('body'));
+      
+        $post->images()->create([
+            'src' => $imageName,
         ]);
 
-        $request->user()->posts()->create($request->only('body'));
-
-        return back();
+        return redirect()->back();
     }
 
     public function destroy(Post $post)
@@ -47,4 +56,6 @@ class PostController extends Controller
 
         return back();
     }
+    
+
 }
