@@ -118,6 +118,10 @@
                         </div> --}}
                 <div
                     class="flex-1 flex items-center text-white text-xs text-gray-400 hover:text-red-600 transition duration-350 ease-in-out">
+                    {{-- @dump(
+                        auth()->user()->isLike($post)
+                    ) --}}
+
                     @if (!auth()->user()->likes($post->user))
                         {{-- @if (!$post->likes(auth()->user())) --}}
                         <form
