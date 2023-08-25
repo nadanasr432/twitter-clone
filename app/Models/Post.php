@@ -12,7 +12,8 @@ class Post extends Model
 
     protected $fillable = [
         'body',
-        'user_id'
+        'user_id',
+        // 'parent_id'
     ];
 
      public function likedBy(User $user)
@@ -31,5 +32,11 @@ class Post extends Model
     }
     public function images(){
         return $this->morphMany(Images::class,'imageable');
+    }
+    public function replies(){
+        return $this->hasMany(self::class,'parent_id')->select('body');
+    }
+    public function parent(){
+        return $this->belongsToOne(User::class,'posts','parent_id' );
     }
 }

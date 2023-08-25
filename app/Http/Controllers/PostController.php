@@ -44,7 +44,7 @@ class PostController extends Controller
         $post->images()->create([
             'src' => $imageName,
         ]);
-
+        $post = Post::find($request->get('parent_id'));
         return redirect()->back();
     }
 

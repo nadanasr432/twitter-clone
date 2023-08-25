@@ -59,6 +59,3 @@ Route::post('/logout',[LogoutController::class,'store'])->name('logout')->withou
 Route::get('PostImages/{id}', [PostController::class, 'PostImage']);
 
 });
-
-
-
