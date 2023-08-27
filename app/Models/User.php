@@ -76,8 +76,9 @@ class User extends Authenticatable
      public function images(){
         return $this->morphMany(Images::class,'imageable');
     }
-     public function parent(){
-        return $this->belongsToOne(self::class,'posts','parent_id');
+    public function comments()
+    {
+        return $this->hasMany(User::class, 'parent_id');
     }
 
 }

@@ -2,10 +2,18 @@
 
 @section('content')
 
+    {{-- <form method="POST" action="{{ route('post.comments.store', $post) }}">
+        @csrf
+        <div class="form-group">
+            <label for="comment">Your Comment</label>
+            <textarea name="comment" id="comment" class="form-control" rows="4"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit Comment</button>
+    </form> --}}
 
     <div class="flex">
         <div class="flex-1 m-2">
-            <h2 class="px-4 py-2 text-xl font-semibold text-white">Home</h2>
+            <h2 class="px-4 py-2 text-xl font-semibold text-white">Comments</h2>
         </div>
         <div class="flex-1 px-4 py-2 m-2">
             <a href=""
@@ -29,12 +37,13 @@
                 src="https://pbs.twimg.com/profile_images/1121328878142853120/e-rpjoJi_bigger.png" alt="">
         </div>
         @auth
-            <form action="{{ route('posts') }}" method="post" class="mb-4" enctype="multipart/form-data">
+            <form action="{{ route('post.comments.store', $post) }}" method="post" class="mb-4"
+                enctype="multipart/form-data">
                 @csrf
                 @method('post')
                 <div class="flex-1 px-2 pt-2 mt-2">
-                    <textarea name="body" id="body" class=" bg-transparent text-gray-400 font-medium text-lg w-full" rows="2"
-                        cols="50" placeholder="What's happening?"></textarea>
+                    <textarea name="comment" id="comment" class=" bg-transparent text-gray-400 font-medium text-lg w-full" rows="4"
+                        cols="50" placeholder="Write a comment!"></textarea>
                     @error('body')
                         {{ $message }}
                     @enderror
@@ -101,10 +110,8 @@
                     <div class="flex-1">
                         <button type="submit"
                             class="bg-blue-400 mt-5 hover:bg-blue-600 text-white font-bold py-2 px-8 rounded-full mr-8 float-right">
-                            Tweet
+                            Reply
                         </button>
-
-
 
                     </div>
 
@@ -112,19 +119,13 @@
             </form>
         @endauth
     </div>
-    <div>
-        @if ($posts->count())
-            @foreach ($posts as $post)
-                <x-post :post="$post" />
+    @if ($comments->count() > 0)
+        <ul>
+            @foreach ($comments as $comment)
+                <x-comment :comment="$comment" />
             @endforeach
-            {{-- {{ $posts->links() }}  --}}
-        @else
-            <p>There are no posts</p>
-        @endif
-
-        <hr class="border-blue-800 border-4">
-    </div>
-
-
-
+        </ul>
+    @else
+        <p>No comments yet..</p>
+    @endif
 @endsection

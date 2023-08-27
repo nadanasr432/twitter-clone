@@ -11,8 +11,11 @@ use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\PostLikeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RepliesController;
 use App\Http\Controllers\UserPostController;
 use App\Http\Middleware\Authenticate;
+
+use App\Http\Controllers\CommentController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -53,6 +56,12 @@ Route::get('/posts/{post}',[PostController::class, 'show'])->name('posts.show');
 Route::post('/posts', [PostController::class, 'store']);
 Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
 Route::post('/posts/{post}/likes', [PostLikeController::class, 'store'])->name('posts.likes');
+
+
+// Route::get('/comments/{post:parent_id}',[PostController::class, 'showComment'])->name('posts.replies');
+// Route::get('/comments', [PostController::class, 'parentReplies'])->name('posts.replies');
+Route::post('/comment/{post}/comment',[CommentController::class,'store'])->name('post.comments.store');
+Route::get('/comments/{post}/comments', [CommentController::class,'showComments'])->name('post.comments.show');
 
 Route::get('/dashboard',[DashboardController::class,'index'])->name('dashboard')->withoutMiddleware([Authenticate::class]);
 Route::post('/logout',[LogoutController::class,'store'])->name('logout')->withoutMiddleware([Authenticate::class]);
