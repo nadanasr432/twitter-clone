@@ -60,8 +60,8 @@ Route::post('/posts/{post}/likes', [PostLikeController::class, 'store'])->name('
 
 // Route::get('/comments/{post:parent_id}',[PostController::class, 'showComment'])->name('posts.replies');
 // Route::get('/comments', [PostController::class, 'parentReplies'])->name('posts.replies');
-Route::post('/comment/{post}/comment',[CommentController::class,'store'])->name('post.comments.store');
-Route::get('/comments/{post}/comments', [CommentController::class,'showComments'])->name('post.comments.show');
+Route::post('/comment/{post}/comment',[PostController::class,'storeComment'])->name('post.comments.store');
+Route::get('/comments/{post}/comments', [PostController::class,'showComments'])->name('post.comments.show');
 
 Route::get('/dashboard',[DashboardController::class,'index'])->name('dashboard')->withoutMiddleware([Authenticate::class]);
 Route::post('/logout',[LogoutController::class,'store'])->name('logout')->withoutMiddleware([Authenticate::class]);

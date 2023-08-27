@@ -18,7 +18,7 @@
                 </p>
                 <span
                     class="text-sm leading-5 font-medium text-gray-400 group-hover:text-gray-300 transition ease-in-out duration-150">
-                    Replied to <span>@</span> {{ $comment->user->nmae }} </span>
+                    Replied to <span>@</span> {{ $comment->user->name }} </span>
             </div>
 
 

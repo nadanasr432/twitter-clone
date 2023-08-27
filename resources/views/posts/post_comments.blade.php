@@ -122,7 +122,7 @@
     @if ($comments->count() > 0)
         <ul>
             @foreach ($comments as $comment)
-                <x-comment :comment="$comment" />
+                <x-post :comment="$comment" />
             @endforeach
         </ul>
     @else

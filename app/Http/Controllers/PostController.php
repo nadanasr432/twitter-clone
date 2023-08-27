@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 class PostController extends Controller
 {
     public function __construct()
@@ -31,7 +31,7 @@ class PostController extends Controller
     public function store(Request $request )
     {
         $this->validate($request, [
-            'body' => 'nullable', 
+            'body', 
 
         ]);
         // get Image Name ;
@@ -44,10 +44,29 @@ class PostController extends Controller
         $post->images()->create([
             'src' => $imageName,
         ]);
-        $post = Post::find($request->get('parent_id'));
+     
         return redirect()->back();
     }
-
+  
+    public function storeComment(Request $request, Post $post )
+    {
+    $user_id = Auth::id();
+    // Create a new comment with the associated user
+    $comment = new post([
+       'user_id'=>$user_id,
+        'body' => $request->input('comment'),
+        'parent_id' => $post->id, 
+    ]);
+    $post->comments()->save($comment);
+  
+        return redirect()->back()->with('success', 'Comment added successfully');
+    }
+    
+ public function showComments(Post $post)
+{
+    $comments = $post->comments;
+    return view('posts.post_comments', compact('comments', 'post'));
+}
     public function destroy(Post $post)
     {
         $this->authorize('delete', $post);

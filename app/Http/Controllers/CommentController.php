@@ -8,7 +8,6 @@ use App\Models\User;
 
 class CommentController extends Controller
 {
-    // ...
 
     public function store(Request $request, Post $post ,User $user)
     {
