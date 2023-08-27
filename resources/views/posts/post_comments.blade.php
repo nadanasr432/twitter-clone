@@ -119,10 +119,12 @@
             </form>
         @endauth
     </div>
-    @if ($comments->count() > 0)
+    <x-post :post="$post" />
+
+    @if ($post->comments->count() > 0)
         <ul>
-            @foreach ($comments as $comment)
-                <x-post :comment="$comment" />
+            @foreach ($post->comments as $reply)
+                <x-post :post="$reply" />
             @endforeach
         </ul>
     @else

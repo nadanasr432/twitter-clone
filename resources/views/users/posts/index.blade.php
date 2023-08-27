@@ -24,10 +24,12 @@
         <hr class="border-gray-800">
     </div>
     <div>
-        <div class="w-full bg-cover bg-no-repeat bg-center"
-            style="height: 200px; background-image: url(https://pbs.twimg.com/profile_banners/2161323234/1585151401/600x200);">
-            <img class="opacity-0 w-full h-full" src="https://pbs.twimg.com/profile_banners/2161323234/1585151401/600x200"
+        <div class="w-full bg-cover bg-no-repeat bg-center" style="height: 200px;">
+
+            <img class=" w-full h-full"
+                src="{{ asset('images/' .auth()->user()->images()->where('type', 'header')?->first()?->src) }}"
                 alt="">
+
         </div>
         <div class="p-4">
             <div class="relative flex w-full">
@@ -35,9 +37,11 @@
                 <div class="flex flex-1">
                     <div style="margin-top: -6rem;">
                         <div style="height:9rem; width:9rem;" class="md rounded-full relative avatar">
+                            {{-- @foreach ($user->images as $image) --}}
                             <img style="height:9rem; width:9rem;" class="md rounded-full relative border-4 border-gray-900"
-                                src="https://pbs.twimg.com/profile_images/1254779846615420930/7I4kP65u_400x400.jpg"
+                                src="{{ asset('images/' .auth()->user()->images()->where('type', 'avatar')->first()?->src) }}"
                                 alt="">
+                            {{-- @endforeach --}}
                             <div class="absolute"></div>
                         </div>
                     </div>
@@ -125,7 +129,8 @@
                 <div class="pt-3 flex justify-start items-start w-full divide-x divide-gray-800 divide-solid"> --}}
                 <div class="pt-3 flex justify-start items-start w-full divide-x divide-gray-800 divide-solid">
                     <div class="text-center pr-3"><span
-                            class="font-bold text-white">{{ $user->followings->count() }}</span><span class="text-gray-600">
+                            class="font-bold text-white">{{ $user->followings->count() }}</span><span
+                            class="text-gray-600">
                             <span class="text-gray-600"><a href="{{ route('profile.followings', $user->id) }}"
                                     class="inline-flex items-center transition-colors duration-300 ease-in focus:outline-none hover:text-blue-400 focus:text-blue-400 rounded-r-full px-4 py-2"
                                     id="list">

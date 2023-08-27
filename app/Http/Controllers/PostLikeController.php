@@ -6,14 +6,16 @@ use App\Models\Post;
 use App\Mail\PostLiked;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use App\Models\User;
 class PostLikeController extends Controller
 {
     public function __construct(){
         $this->middleware(['auth']);
     }
     public function store(Post $post ){
-        
+        // dd($post->id);
         auth()->user()->likes()->toggle($post->id);
+      
     
        
         // if (!$post->likes()->onlyTrashed()->where('user_id', $request->user()->id)->count()) {

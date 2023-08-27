@@ -27,12 +27,34 @@ class ProfileController extends Controller
         'username'=>'required',
         'email' => 'required |email|max:255',
         'password' => 'required|confirmed'
+
         ]);
+       
          auth()->attempt([
             'email' => $request->email,
             'password' => $request->password
         ]);
+       
+        if ($request->avatar) {
+            $imageName = time() .".". $request->avatar->extension();
+        
+            $request->avatar->move(public_path('images'), $imageName);
+             $user->images()->where('type', 'avatar')->firstOrCreate([
+                'src' => $imageName,
+                'type' => 'avatar'
+            ]);
+        }
+        if ($request->header) {
+            $header = time() .".". $request->header->extension();
+        
+            $request->header->move(public_path('images'), $header);
+             $user->images()->where('type', 'header')->firstOrCreate([
+                'src' => $header,
+                'type' => 'header'
+            ]);
+        }
         $user->update($data);
+
         return redirect(route('users.post',auth()->user()))->with('success','profile updated successfully');
     }
     

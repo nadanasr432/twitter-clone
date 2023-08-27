@@ -53,7 +53,7 @@ class User extends Authenticatable
     
     public function likes()
     {
-        return $this->belongsToMany(self::class,'likes','user_id'); // OneTo Many has many child
+        return $this->belongsToMany(Post::class,'likes', 'user_id', 'post_id'); // OneTo Many has many child
     }
     
     public function isLike($post) {

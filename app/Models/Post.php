@@ -28,8 +28,9 @@ class Post extends Model
 
      public function likes()
      {
-       return $this->belongsToMany(User::class,'likes','user_id','post_id');//many to many
+       return $this->belongsToMany(User::class,'likes','user_id','post_id',);//many to many
     }
+    
     public function images(){
         return $this->morphMany(Images::class,'imageable');
     }
