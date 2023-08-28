@@ -45,11 +45,7 @@
     </head>
 
 <body class="bg-gray-200">
-    <div class="fixed bottom-0 left-0 right-0 z-40 px-4 py-3 text-center text-white bg-gray-800">
-        This a Twitter Clone by hiravesonali.
-        <a class="text-gray-200 underline" href="https://tailwindcomponents.com/component/twitter-clone">Component
-            details</a>
-    </div>
+
     <div class="bg-blue-900">
         <div class="flex">
 
@@ -91,6 +87,16 @@
                             </path>
                         </svg>
                         Notifications
+                    </a>
+                    <a href="{{ route('user.requests') }}"
+                        class="mt-1 group flex items-center px-2 py-2 text-base leading-6 font-medium rounded-full hover:bg-blue-800 hover:text-blue-300">
+                        <svg class="mr-4 h-6 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="2" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+                            </path>
+                        </svg>
+                        Requests
                     </a>
                     <a href="#"
                         class="mt-1 group flex items-center px-2 py-2 text-base leading-6 font-medium rounded-full hover:bg-blue-800 hover:text-blue-300">
@@ -308,94 +314,7 @@
                 <!--third-people suggetion to follow section-->
 
                 <div class="max-w-sm rounded-lg bg-blue-800 overflow-hidden shadow-lg m-4 mr-20">
-                    <div class="flex">
-                        <div class="flex-1 m-2">
-                            <h2 class="px-4 py-2 text-xl w-48 font-semibold text-white">Who to follow</h2>
-                        </div>
-                    </div>
-
-
-                    <hr class="border-gray-600">
-
-                    <!--first person who to follow-->
-
-                    <div class="flex flex-shrink-0">
-                        <div class="flex-1 ">
-                            <div class="flex items-center w-48">
-                                <div>
-                                    <img class="inline-block h-10 w-auto rounded-full ml-4 mt-2"
-                                        src="https://pbs.twimg.com/profile_images/1121328878142853120/e-rpjoJi_bigger.png"
-                                        alt="">
-                                </div>
-                                <div class="ml-3 mt-3">
-                                    <p class="text-base leading-6 font-medium text-white">
-                                        Sonali Hirave
-                                    </p>
-                                    <p
-                                        class="text-sm leading-5 font-medium text-gray-400 group-hover:text-gray-300 transition ease-in-out duration-150">
-                                        @ShonaDesign
-                                    </p>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="flex-1 px-4 py-2 m-2">
-                            <a href="" class=" float-right">
-                                <button
-                                    class="bg-transparent hover:bg-blue-500 text-white font-semibold hover:text-white py-2 px-4 border border-white hover:border-transparent rounded-full">
-                                    Follow
-                                </button>
-                            </a>
-
-                        </div>
-                    </div>
-                    <hr class="border-gray-600">
-
-                    <!--second person who to follow-->
-
-                    <div class="flex flex-shrink-0">
-                        <div class="flex-1 ">
-                            <div class="flex items-center w-48">
-                                <div>
-                                    <img class="inline-block h-10 w-auto rounded-full ml-4 mt-2"
-                                        src="https://pbs.twimg.com/profile_images/1121328878142853120/e-rpjoJi_bigger.png"
-                                        alt="">
-                                </div>
-                                <div class="ml-3 mt-3">
-                                    <p class="text-base leading-6 font-medium text-white">
-                                        Sonali Hirave
-                                    </p>
-                                    <p
-                                        class="text-sm leading-5 font-medium text-gray-400 group-hover:text-gray-300 transition ease-in-out duration-150">
-                                        @ShonaDesign
-                                    </p>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="flex-1 px-4 py-2 m-2">
-                            <a href="" class=" float-right">
-                                <button
-                                    class="bg-transparent hover:bg-blue-500 text-white font-semibold hover:text-white py-2 px-4 border border-white hover:border-transparent rounded-full">
-                                    Follow
-                                </button>
-                            </a>
-
-                        </div>
-                    </div>
-
-                    <hr class="border-gray-600">
-
-
-
-                    <!--show more-->
-
-                    <div class="flex">
-                        <div class="flex-1 p-4">
-                            <h2 class="px-4 ml-2 w-48 font-bold text-blue-400">Show more</h2>
-                        </div>
-                    </div>
-
+                    @yield('users')
                 </div>
 
                 <div class="flow-root m-6 inline">

@@ -21,6 +21,25 @@ class FollowerController extends Controller
         return redirect()->back();
 
     }
+    public function acceptFollowRequest(Request $request, User $user)
+{
+   $currentUser = auth()->user(); 
+
+        if ($user->followers->contains($currentUser->id)) {
+           
+            $user->followers()->attach($currentUser);
+            $currentUser->followings()->detach($user);
+            $user->followers()->updateExistingPivot($currentUser->id, ['status' => 'approved']);
+
+
+            return redirect()->back()->with('success', 'Follow request accepted successfully!');
+        }
+
+        return redirect()->back()->with('error', 'No pending follow request from this user');
+        
+    // auth()->user()->followings()->attach($user);
+    // return redirect()->back();
+    }
     public function ShowFollowers(User $user){
         $users=$user->followers()->get();
         return view('profile.followers',['users'=>$users]);
@@ -31,6 +50,13 @@ class FollowerController extends Controller
         return view('profile.followings',['users'=>$users]);
 
     }
+    public function ShowFollowRequests(User $user)
+{
+    $users = $user->followers()->wherePivot('status', 'pending')->get();
+    
+
+    return view('profile.requests', ['users' => $users]);
+}
 
     }
 

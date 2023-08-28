@@ -16,7 +16,14 @@ class PostController extends Controller
     public function index()
     {
         // if(Route::currentRouteName() == 'posts') {
-        $posts = Post::latest()->with(['user', 'likes'])->get();
+        // dd(auth()->user()->followings()->pluck('id')->toArray(),auth()->user()->id);
+        
+        $followingId = auth()->user()->followings()->pluck('id')->toArray();
+        $followingId[] = auth()->user()->id;
+
+        // [1 , 2] [];
+        $posts = Post::latest()->whereIn('user_id',$followingId)->get();
+        // dd($posts);
        
         return view('posts.index', [
             'posts' => $posts

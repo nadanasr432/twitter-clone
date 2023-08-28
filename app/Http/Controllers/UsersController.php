@@ -14,4 +14,10 @@ class UsersController extends Controller
        
     }
     
+     public function  ShowRequests(){
+         $users = User::all()->except(Auth::id());
+         return view('profile.requests',['users'=>$users]);
+       
+    }
+    
 }

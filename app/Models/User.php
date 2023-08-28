@@ -63,11 +63,14 @@ class User extends Authenticatable
    
     //access many Like Through Post   
     public function followers(){
-        return $this->belongsToMany(self::class,'followers','follower_id', 'following_id' );
+        return $this->belongsToMany(self::class,'followers','following_id', 'follower_id' )->where('status','approved');
     }
 
     public function followings(){
-        return $this->belongsToMany(self::class,'followers', 'following_id','follower_id' );
+        return $this->belongsToMany(self::class,'followers', 'follower_id','following_id' )->where('status','approved');
+    }
+    public function requests(){
+        return $this->belongsToMany(self::class,'followers','follower_id', 'following_id')->where('status','pending');
     }
     public function isFollowing(User $user)
     {
@@ -79,6 +82,16 @@ class User extends Authenticatable
     public function comments()
     {
         return $this->hasMany(User::class, 'parent_id');
+    }
+
+    public function getAvatarUrlAttribute()
+    {
+        // avatar_url
+        $avatar = $this->images()->where('type', 'avatar')->first();
+        if (!$avatar) {
+            return asset('default_avatar.png');
+        }
+        return asset('images/' . $avatar->src);
     }
 
 }

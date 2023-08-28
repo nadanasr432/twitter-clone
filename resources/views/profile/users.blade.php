@@ -11,8 +11,9 @@
                                 <div class="flex flex-col w-10 h-10 justify-center items-center mr-4">
                                     <a href="#" class="block relative">
                                         <img alt="profil"
-                                            src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-1.2.1&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=150&amp;q=80"
+                                            src="{{ asset('images/' .auth()->user()->images()->where('type', 'avatar')->first()?->src) }}"
                                             class="mx-auto object-cover rounded-full h-10 w-10">
+
                                     </a>
                                 </div>
                                 <div class="flex-1 pl-1 mr-16">

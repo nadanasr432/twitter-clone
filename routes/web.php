@@ -1,21 +1,22 @@
 <?php
 
-use App\Http\Controllers\Auth\LoginController;
+use App\Http\Middleware\Authenticate;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\RegisterController;
-use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Auth\LogoutController;
-use App\Http\Controllers\FollowerController;
-use App\Http\Controllers\ImagesController;
 use App\Http\Controllers\PostController;
-use App\Http\Controllers\PostLikeController;
+use App\Http\Controllers\UsersController;
+use App\Http\Controllers\ImagesController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RepliesController;
+use App\Http\Controllers\FollowerController;
+use App\Http\Controllers\PostLikeController;
 use App\Http\Controllers\UserPostController;
-use App\Http\Middleware\Authenticate;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\LogoutController;
 
-use App\Http\Controllers\CommentController;
+use App\Http\Controllers\Auth\RegisterController;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -45,7 +46,8 @@ Route::get('/profile/edit',[ProfileController::class ,'edit'])->name('profile.ed
 Route::put('/profile/update',[ProfileController::class ,'update'])->name('profile.update');
 Route::get('/Followers/{user}',[FollowerController::class,'ShowFollowers'])->name('profile.followers');
 Route::get('/Followings/{user}',[FollowerController::class,'ShowFollowings'])->name('profile.followings');
-Route::post('follow-unfollow-user/{user}', [FollowerController::class, 'store'])->name('profile.follower');
+Route::post('/user/{user}/follow-request',[FollowerController::class, 'store'])->name('profile.follower');
+Route::post('/user/{user}/accept-request', [FollowerController::class, 'acceptFollowRequest'])->name('follow.accept');
 
 Route::get('/Users',[UsersController::class,'ShowUsers'])->name('profile.users');
 Route::get('/users/{user:username}',[UserPostController::class,'index'])->name('users.post');
@@ -56,8 +58,9 @@ Route::get('/posts/{post}',[PostController::class, 'show'])->name('posts.show');
 Route::post('/posts', [PostController::class, 'store']);
 Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
 Route::post('/posts/{post}/likes', [PostLikeController::class, 'store'])->name('posts.likes');
-
-
+Route::get('/requests',[UsersController::class,'ShowRequests'])->name('user.requests');
+Route::post('/accepts', [FollowerController::class, 'acceptFollowRequest'])->name('user.accept');
+Route::get('/follow-requests', [FollowerController::class, 'ShowFollowRequests'])->name('follow-requests');
 // Route::get('/comments/{post:parent_id}',[PostController::class, 'showComment'])->name('posts.replies');
 // Route::get('/comments', [PostController::class, 'parentReplies'])->name('posts.replies');
 Route::post('/comment/{post}/comment',[PostController::class,'storeComment'])->name('post.comments.store');
