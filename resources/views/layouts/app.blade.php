@@ -41,7 +41,25 @@
         {{-- <link href="https://unpkg.com/tailwindcss@1.4.6/dist/tailwind.min.css" rel="stylesheet"> --}}
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         @vite('resources/css/app.css')
+        <script
+        src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"></script>
+ <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+  <script>
 
+    // Enable pusher logging - don't include this in production
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher('42f14d3ea786c415f61c', {
+      cluster: 'mt1'
+    });
+
+    var channel = pusher.subscribe('Posty');
+    channel.bind('my-event', function(data) {
+      alert(JSON.stringify(data));
+    });
+  </script>
     </head>
 
 <body class="bg-gray-200">
@@ -69,7 +87,7 @@
                         </svg>
                         Home
                     </a>
-                    <a href="#"
+                    <a href="{{ route('hashtag.show') }}"
                         class="mt-1 group flex items-center px-2 py-2 text-base leading-6 font-semibold rounded-full hover:bg-blue-800 hover:text-blue-300">
                         <svg class="mr-4 h-6 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round"
                             stroke-width="2" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,9 +96,14 @@
 
                         Explore
                     </a>
-                    <a href="#"
-                        class="mt-1 group flex items-center px-2 py-2 text-base leading-6 font-medium rounded-full hover:bg-blue-800 hover:text-blue-300">
-                        <svg class="mr-4 h-6 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round"
+                    <a href="{{ route('notifications.index') }}" id="notifications-link"
+                       class="mt-1 group flex items-center px-2 py-2 text-base leading-6 font-medium rounded-full hover:bg-blue-800 hover:text-blue-300">
+                       <i class="fa fa-bell"></i>
+                       @if(auth()->user()->unreadNotifications->count() > 0)
+                           <span id="notifications-count-badge" class="badge badge-danger">{{ auth()->user()->unreadNotifications->count() }}</span>
+                       @endif
+                      </span>
+                       <svg class="mr-4 h-6 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round"
                             stroke-width="2" stroke="currentColor" viewBox="0 0 24 24">
                             <path
                                 d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
@@ -186,9 +209,6 @@
                         class="bg-blue-800 h-10 px-10 pr-5 w-full rounded-full text-sm focus:outline-none bg-purple-white shadow rounded border-0">
 
                 </div>
-
-
-
                 <!--second-trending tweet section-->
                 <div class="max-w-sm rounded-lg bg-blue-800 overflow-hidden shadow-lg m-4 mr-20">
                     <div class="flex">
@@ -209,97 +229,59 @@
                             </a>
                         </div>
                     </div>
-
-
+                    <hr class="border-gray-600">
+                    <!-- trending tweet-->
+                    <div class="flex">
+                        @php
+                        use App\Models\Post;
+                        $postss = Post::all();
+                        $uniqueHashtags = collect();
+                        foreach ($postss as $post) {
+                            $hashtagsInBody = [];
+                            preg_match_all('/#(\w+)/', $post->body, $hashtagsInBody);
+                            $uniqueHashtags = $uniqueHashtags->merge($hashtagsInBody[1]);
+                        }
+                        $uniqueHashtags = $uniqueHashtags->unique();
+                        $sortedHashtags = $uniqueHashtags->toArray();
+                        usort($sortedHashtags, function ($a, $b){
+                            $countA = Post::where('body', 'like', '%' . $a . '%')->count();
+                            $countB = Post::where('body', 'like', '%' . $b . '%')->count();
+                            return $countB - $countA;  
+                        });
+                        @endphp
+                        <ul>
+                            @foreach ($sortedHashtags as $index => $hashtag)
+                            @php
+                            $count = Post::where('body', 'like', '%' . $hashtag . '%')->count();
+                            @endphp
+                                <li>
+                                    <div class="flex">
+                                        <div class="flex-1">
+                                            <p class="px-4 ml-2 mt-3 w-48 text-xs text-gray-400">{{ $index + 1 }} . Trending</p>
+                                            <h2 class="px-4 ml-2 w-48 font-bold text-white">{{ $hashtag }}</h2>
+                                            <p class="px-4 ml-2 mb-3 w-48 text-xs text-gray-400">{{ $count }} Tweets</p>
+                                        </div>
+                                        <div class="flex-1 px-4 py-2 m-2">
+                                            <a href="{{ route('posts.by.hashtag', $hashtag) }}"
+                                                class="text-2xl rounded-full text-gray-400 hover:bg-blue-800 hover:text-blue-300 float-right">
+                                                <svg class="m-2 h-5 w-5" fill="none" stroke-linecap="round"
+                                                    stroke-linejoin="round" stroke-width="2" stroke="currentColor"
+                                                    viewBox="0 0 24 24">
+                                                    <path d="M19 9l-7 7-7-7"></path>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <hr class="border-gray-600">
+                                </li>
+                            @endforeach
+                        </ul>
+                     
                     <hr class="border-gray-600">
 
-                    <!--first trending tweet-->
-                    <div class="flex">
-                        <div class="flex-1">
-                            <p class="px-4 ml-2 mt-3 w-48 text-xs text-gray-400">1 . Trending</p>
-                            <h2 class="px-4 ml-2 w-48 font-bold text-white">#Microsoft363</h2>
-                            <p class="px-4 ml-2 mb-3 w-48 text-xs text-gray-400">5,466 Tweets</p>
-
-                        </div>
-                        <div class="flex-1 px-4 py-2 m-2">
-                            <a href=""
-                                class=" text-2xl rounded-full text-gray-400 hover:bg-blue-800 hover:text-blue-300 float-right">
-                                <svg class="m-2 h-5 w-5" fill="none" stroke-linecap="round"
-                                    stroke-linejoin="round" stroke-width="2" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path d="M19 9l-7 7-7-7"></path>
-                                </svg>
-                            </a>
-                        </div>
+                   
                     </div>
                     <hr class="border-gray-600">
-
-                    <!--second trending tweet-->
-
-                    <div class="flex">
-                        <div class="flex-1">
-                            <p class="px-4 ml-2 mt-3 w-48 text-xs text-gray-400">2 . Politics . Trending</p>
-                            <h2 class="px-4 ml-2 w-48 font-bold text-white">#HI-Fashion</h2>
-                            <p class="px-4 ml-2 mb-3 w-48 text-xs text-gray-400">8,464 Tweets</p>
-
-                        </div>
-                        <div class="flex-1 px-4 py-2 m-2">
-                            <a href=""
-                                class=" text-2xl rounded-full text-gray-400 hover:bg-blue-800 hover:text-blue-300 float-right">
-                                <svg class="m-2 h-5 w-5" fill="none" stroke-linecap="round"
-                                    stroke-linejoin="round" stroke-width="2" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path d="M19 9l-7 7-7-7"></path>
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                    <hr class="border-gray-600">
-
-                    <!--third trending tweet-->
-
-                    <div class="flex">
-                        <div class="flex-1">
-                            <p class="px-4 ml-2 mt-3 w-48 text-xs text-gray-400">3 . Rock . Trending</p>
-                            <h2 class="px-4 ml-2 w-48 font-bold text-white">#Ferrari</h2>
-                            <p class="px-4 ml-2 mb-3 w-48 text-xs text-gray-400">5,586 Tweets</p>
-
-                        </div>
-                        <div class="flex-1 px-4 py-2 m-2">
-                            <a href=""
-                                class=" text-2xl rounded-full text-gray-400 hover:bg-blue-800 hover:text-blue-300 float-right">
-                                <svg class="m-2 h-5 w-5" fill="none" stroke-linecap="round"
-                                    stroke-linejoin="round" stroke-width="2" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path d="M19 9l-7 7-7-7"></path>
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                    <hr class="border-gray-600">
-
-                    <!--forth trending tweet-->
-
-                    <div class="flex">
-                        <div class="flex-1">
-                            <p class="px-4 ml-2 mt-3 w-48 text-xs text-gray-400">4 . Auto Racing . Trending</p>
-                            <h2 class="px-4 ml-2 w-48 font-bold text-white">#vettel</h2>
-                            <p class="px-4 ml-2 mb-3 w-48 text-xs text-gray-400">9,416 Tweets</p>
-
-                        </div>
-                        <div class="flex-1 px-4 py-2 m-2">
-                            <a href=""
-                                class=" text-2xl rounded-full text-gray-400 hover:bg-blue-800 hover:text-blue-300 float-right">
-                                <svg class="m-2 h-5 w-5" fill="none" stroke-linecap="round"
-                                    stroke-linejoin="round" stroke-width="2" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path d="M19 9l-7 7-7-7"></path>
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
-                    <hr class="border-gray-600">
-
                     <!--show more-->
 
                     <div class="flex">

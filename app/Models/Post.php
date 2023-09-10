@@ -42,8 +42,8 @@ class Post extends Model
     {
         return $this->hasMany(self::class, 'parent_id');
     }
-//   public function commentedBy(User $user)
-//     {
-//          return $this->comments->contains('user_id', $user->id);
-//      }
+    public function hashtags()
+    {
+        return $this->belongsToMany(Hashtag::class)->withTimestamps();
+    }
 }

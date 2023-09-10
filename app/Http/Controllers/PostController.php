@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Hashtag;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Notifications\NewCommentNotification;
 class PostController extends Controller
 {
     public function __construct()
@@ -15,25 +17,22 @@ class PostController extends Controller
     
     public function index()
     {
-        // if(Route::currentRouteName() == 'posts') {
-        // dd(auth()->user()->followings()->pluck('id')->toArray(),auth()->user()->id);
-        
         $followingId = auth()->user()->followings()->pluck('id')->toArray();
         $followingId[] = auth()->user()->id;
 
-        // [1 , 2] [];
         $posts = Post::latest()->whereIn('user_id',$followingId)->get();
-        // dd($posts);
+      
        
         return view('posts.index', [
             'posts' => $posts
         ]);
     }
 
-    public function show(Post $post)
+    public function show(Post $post,$hashtag)
     {
         return view('posts.show', [
-            'post' => $post
+            'post' => $post,
+            'hashtag' => $hashtag
         ]);
     }
 
@@ -42,15 +41,20 @@ class PostController extends Controller
         $this->validate($request, [
             'body', 
             'parent_id'
+        ]);
+        $post = $request->user()->posts()->create($request->only('body'));
+        //store hashtag name
+        preg_match_all('/#(\w+)/', $post->body, $hashtags);
 
-        ]);      $post = $request->user()->posts()->create($request->only('body'));
+        foreach ($hashtags[1] as $hashtag) {
+       
+            $existingHashtag = Hashtag::firstOrCreate(['name' => $hashtag]);
+            $post->hashtags()->attach($existingHashtag->id);
+        }
         // get Image Name ;
         if ($request->src) {
             $imageName = time() . "." . $request->src->extension();
             $request->src->move(public_path('images'), $imageName);
-
-      
-
             $post->images()->create([
                 'src' => $imageName,
             ]);
@@ -61,7 +65,6 @@ class PostController extends Controller
    public function storeComment(Request $request, Post $post)
 {
     $user_id = Auth::id();
-    
     // Create a new comment instance
     $comment = new Post([
         'user_id' => $user_id,
@@ -69,7 +72,9 @@ class PostController extends Controller
         'parent_id'=>$post->id
         
     ]);
-
+    if ($post->user_id !== $user_id) {
+        $post->user->notify(new NewCommentNotification($post, auth()->user()));
+    }
     // Associate the comment with the post and save it
     $post->comments()->save($comment);
 
@@ -88,6 +93,22 @@ class PostController extends Controller
 
         return back();
     }
+    public function showHashtag(Hashtag $hashtag)
+    {
+        $posts = Post::all();
+        $uniqueHashtags = collect();
     
+        foreach ($posts as $post) {
+            $hashtagsInBody = [];
+            preg_match_all('/#(\w+)/', $post->body, $hashtagsInBody);
+            $uniqueHashtags = $uniqueHashtags->merge($hashtagsInBody[1]);
+        }
+        $uniqueHashtags = $uniqueHashtags->unique();
+        return view('hashtags.show', ['uniqueHashtags' => $uniqueHashtags,'posts'=>$posts]);
+    }
+    public function showPostsByHashtag($hashtag)
+    {
+        $postsWithHashtag = Post::where('body', 'like', '%' . $hashtag . '%')->get();
 
-}
+    return view('hashtags.by_hashtag', ['hashtag' => $hashtag, 'posts' => $postsWithHashtag]);
+}}

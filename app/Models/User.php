@@ -2,16 +2,23 @@
 
 namespace App\Models;
 
+
+use Illuminate\Database\Eloquent\Model;
 use App\Models\Like;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Models\Post;
 
+
+
+
+
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -23,6 +30,7 @@ class User extends Authenticatable
         'email',
         'password',
         'username',
+        'fcm_token'
     ];
 
     /**
@@ -70,8 +78,9 @@ class User extends Authenticatable
         return $this->belongsToMany(self::class,'followers', 'follower_id','following_id' )->where('status','approved');
     }
     public function requests(){
-        return $this->belongsToMany(self::class,'followers','follower_id', 'following_id')->where('status','pending');
+        return $this->belongsToMany(self::class,'followers','following_id', 'follower_id')->where('status','pending');
     }
+    
     public function isFollowing(User $user)
     {
         return !is_null($this->followings()->where('follower_id', $user->id)->first());
@@ -93,7 +102,7 @@ class User extends Authenticatable
         }
         return asset('images/' . $avatar->src);
     }
-
+   
 }
     
 
