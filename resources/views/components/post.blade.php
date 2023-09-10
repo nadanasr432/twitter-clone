@@ -19,10 +19,12 @@
 </div>
 <div class="pl-16">
     <p class="text-base width-auto font-medium text-white flex-shrink">
+
         {{ $post->body }}
-        @foreach ($post->images as $image)
+        @foreach ($post->images ?? [] as $image)
             <img src="{{ asset('images/' . $image->src) }}">
         @endforeach
+
     </p>
 
     <div class="flex">
@@ -133,64 +135,3 @@
 
 </div>
 <hr class="border-gray-600">
-<!-- The core Firebase JS SDK is always required and must be listed first -->
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.3.2/firebase.js"></script>
-<script>// TODO: Add SDKs for Firebase products that you want to use
-    // https://firebase.google.com/docs/web/setup#available-libraries
-  
-    // Your web app's Firebase configuration
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-    const firebaseConfig = {
-      apiKey: "AIzaSyDR6TqI2WLAVfIvZNtdlcudq5MawBwF8hE",
-      authDomain: "twitter-bbed3.firebaseapp.com",
-      projectId: "twitter-bbed3",
-      storageBucket: "twitter-bbed3.appspot.com",
-      messagingSenderId: "945923383380",
-      appId: "1:945923383380:web:0021361abaed4cc5334dc1",
-      measurementId: "G-2C7CJ31V8H"
-    };
-  
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const messaging = firebase.messaging();
-    function startFCM() {
-        messaging
-            .requestPermission()
-            .then(function () {
-                return messaging.getToken()
-            })
-            .then(function (response) {
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                });
-                $.ajax({
-                    url: '{{ route("store.token") }}',
-                    type: 'POST',
-                    data: {
-                        token: response
-                    },
-                    dataType: 'JSON',
-                    success: function (response) {
-                        alert('Token stored.');
-                    },
-                    error: function (error) {
-                        alert(error);
-                    },
-                });
-            }).catch(function (error) {
-                alert(error);
-            });
-    }
-    messaging.onMessage(function (payload) {
-        const title = payload.notification.title;
-        const options = {
-            body: payload.notification.body,
-            icon: payload.notification.icon,
-        };
-        new Notification(title, options);
-    });
-  </script>

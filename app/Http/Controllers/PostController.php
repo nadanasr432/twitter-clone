@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Notifications\NewCommentNotification;
+use App\Services\FCMService;
 class PostController extends Controller
 {
     public function __construct()
@@ -39,11 +40,19 @@ class PostController extends Controller
     public function store(Request $request )
     {
         $this->validate($request, [
-            'body', 
-            'parent_id'
+            'body'=>'nullable', 
+            'parent_id'=>'nullable'
         ]);
         $post = $request->user()->posts()->create($request->only('body'));
-        //store hashtag name
+        if ($request->src) {
+            $imageName = time() . "." . $request->src->extension();
+            $request->src->move(public_path('images'), $imageName);
+            $post->images()->create([
+                'src' => $imageName,
+                'user_id'=> auth()->id()
+            ]);
+        }
+          
         preg_match_all('/#(\w+)/', $post->body, $hashtags);
 
         foreach ($hashtags[1] as $hashtag) {
@@ -51,14 +60,7 @@ class PostController extends Controller
             $existingHashtag = Hashtag::firstOrCreate(['name' => $hashtag]);
             $post->hashtags()->attach($existingHashtag->id);
         }
-        // get Image Name ;
-        if ($request->src) {
-            $imageName = time() . "." . $request->src->extension();
-            $request->src->move(public_path('images'), $imageName);
-            $post->images()->create([
-                'src' => $imageName,
-            ]);
-        }
+        
         return redirect()->back();
     }
   
@@ -74,7 +76,20 @@ class PostController extends Controller
     ]);
     if ($post->user_id !== $user_id) {
         $post->user->notify(new NewCommentNotification($post, auth()->user()));
+        
+            $user = $post->user;
+
+        
+        FCMService::send(
+            $user->fcm_token,
+            [
+                'title' => auth()->user()->name,
+                'body' => 'has commented your tweet',
+            ]
+        );
     }
+
+    
     // Associate the comment with the post and save it
     $post->comments()->save($comment);
 

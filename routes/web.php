@@ -4,10 +4,7 @@ use App\Http\Middleware\Authenticate;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UsersController;
-use App\Http\Controllers\ImagesController;
-use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\RepliesController;
 use App\Http\Controllers\FollowerController;
 use App\Http\Controllers\PostLikeController;
 use App\Http\Controllers\UserPostController;
@@ -15,12 +12,9 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\UserNotificationsController;
-use App\Http\Controllers\FirebaseNotificationController ;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Mail\MailUser;
-use App\Mail\PostLiked;
-use App\Models\Post;
-use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -76,7 +70,5 @@ Route::get('/notifications/mark-as-read/{id}', [UserNotificationsController::cla
 Route::patch('/fcm-token', [UserNotificationsController::class, 'saveToken'])->name('save-token');
 Route::get('/hashtags', [PostController::class, 'showHashtag'])->name('hashtag.show');
 Route::get('posts/by-hashtag/{hashtag}', [PostController::class, 'showPostsByHashtag'])->name('posts.by.hashtag');
-Route::post('/store-token', [FirebaseNotificationController::class, 'updateDeviceToken'])->name('store.token');
-Route::post('/send-web-notification', [FirebaseNotificationController::class, 'sendNotification'])->name('send.web-notification');
-
+Route::post('/store-token', [HomeController::class, 'storeToken'])->name('store.token');
 });

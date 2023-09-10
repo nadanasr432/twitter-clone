@@ -12,7 +12,6 @@
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-        <link rel="manifest" href="/site.webmanifest">
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#0ed3cf">
         <meta name="msapplication-TileColor" content="#0ed3cf">
         <meta name="theme-color" content="#0ed3cf">
@@ -36,30 +35,13 @@
 
         <link rel="canonical" href="https://tailwindcomponents.com/component/twitter-clone" itemprop="URL">
 
-        <title>Twitter Clone by hiravesonali. </title>
+        <title>Twitter Clone</title>
 
         {{-- <link href="https://unpkg.com/tailwindcss@1.4.6/dist/tailwind.min.css" rel="stylesheet"> --}}
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         @vite('resources/css/app.css')
-        <script
-        src="https://code.jquery.com/jquery-3.7.1.min.js"
-      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
-      crossorigin="anonymous"></script>
- <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
-  <script>
 
-    // Enable pusher logging - don't include this in production
-    Pusher.logToConsole = true;
 
-    var pusher = new Pusher('42f14d3ea786c415f61c', {
-      cluster: 'mt1'
-    });
-
-    var channel = pusher.subscribe('Posty');
-    channel.bind('my-event', function(data) {
-      alert(JSON.stringify(data));
-    });
-  </script>
     </head>
 
 <body class="bg-gray-200">
@@ -97,19 +79,21 @@
                         Explore
                     </a>
                     <a href="{{ route('notifications.index') }}" id="notifications-link"
-                       class="mt-1 group flex items-center px-2 py-2 text-base leading-6 font-medium rounded-full hover:bg-blue-800 hover:text-blue-300">
-                       <i class="fa fa-bell"></i>
-                       @if(auth()->user()->unreadNotifications->count() > 0)
-                           <span id="notifications-count-badge" class="badge badge-danger">{{ auth()->user()->unreadNotifications->count() }}</span>
-                       @endif
-                      </span>
-                       <svg class="mr-4 h-6 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round"
+                        class="mt-1 group flex items-center px-2 py-2 text-base leading-6 font-medium rounded-full hover:bg-blue-800 hover:text-blue-300">
+                        <i class="fa fa-bell"></i>
+
+                        </span>
+                        <svg class="mr-4 h-6 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round"
                             stroke-width="2" stroke="currentColor" viewBox="0 0 24 24">
                             <path
                                 d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
                             </path>
                         </svg>
                         Notifications
+                        @if (auth()->user()->unreadNotifications->count() > 0)
+                            <span id="notifications-count-badge"
+                                class="text-red-400 mx-1">{{ auth()->user()->unreadNotifications->count() }}</span>
+                        @endif
                     </a>
                     <a href="{{ route('user.requests') }}"
                         class="mt-1 group flex items-center px-2 py-2 text-base leading-6 font-medium rounded-full hover:bg-blue-800 hover:text-blue-300">
@@ -233,33 +217,35 @@
                     <!-- trending tweet-->
                     <div class="flex">
                         @php
-                        use App\Models\Post;
-                        $postss = Post::all();
-                        $uniqueHashtags = collect();
-                        foreach ($postss as $post) {
-                            $hashtagsInBody = [];
-                            preg_match_all('/#(\w+)/', $post->body, $hashtagsInBody);
-                            $uniqueHashtags = $uniqueHashtags->merge($hashtagsInBody[1]);
-                        }
-                        $uniqueHashtags = $uniqueHashtags->unique();
-                        $sortedHashtags = $uniqueHashtags->toArray();
-                        usort($sortedHashtags, function ($a, $b){
-                            $countA = Post::where('body', 'like', '%' . $a . '%')->count();
-                            $countB = Post::where('body', 'like', '%' . $b . '%')->count();
-                            return $countB - $countA;  
-                        });
+                            // use App\Models\Post;
+                            // $postss = Post::all();
+                            // $uniqueHashtags = collect();
+                            // foreach ($postss as $post) {
+                            //     $hashtagsInBody = [];
+                            //     preg_match_all('/#(\w+)/', $post->body, $hashtagsInBody);
+                            //     $uniqueHashtags = $uniqueHashtags->merge($hashtagsInBody[1]);
+                            // }
+                            // $uniqueHashtags = $uniqueHashtags->unique();
+                            // $sortedHashtags = $uniqueHashtags->toArray();
+                            // usort($sortedHashtags, function ($a, $b) {
+                            //     $countA = Post::where('body', 'like', '%' . $a . '%')->count();
+                            //     $countB = Post::where('body', 'like', '%' . $b . '%')->count();
+                            //     return $countB - $countA;
+                            // });
+                            $sortedHashtags = \App\Models\Hashtag::get();
                         @endphp
                         <ul>
                             @foreach ($sortedHashtags as $index => $hashtag)
-                            @php
-                            $count = Post::where('body', 'like', '%' . $hashtag . '%')->count();
-                            @endphp
                                 <li>
                                     <div class="flex">
                                         <div class="flex-1">
-                                            <p class="px-4 ml-2 mt-3 w-48 text-xs text-gray-400">{{ $index + 1 }} . Trending</p>
-                                            <h2 class="px-4 ml-2 w-48 font-bold text-white">{{ $hashtag }}</h2>
-                                            <p class="px-4 ml-2 mb-3 w-48 text-xs text-gray-400">{{ $count }} Tweets</p>
+                                            <p class="px-4 ml-2 mt-3 w-48 text-xs text-gray-400">{{ $index + 1 }} .
+                                                Trending</p>
+                                            <h2 class="px-4 ml-2 w-48 font-bold text-white">
+                                                {{ $hashtag->name }}</h2>
+                                            <p class="px-4 ml-2 mb-3 w-48 text-xs text-gray-400">
+                                                {{ $hashtag->post->count() }}
+                                                Tweets</p>
                                         </div>
                                         <div class="flex-1 px-4 py-2 m-2">
                                             <a href="{{ route('posts.by.hashtag', $hashtag) }}"
@@ -276,10 +262,10 @@
                                 </li>
                             @endforeach
                         </ul>
-                     
-                    <hr class="border-gray-600">
 
-                   
+                        <hr class="border-gray-600">
+
+
                     </div>
                     <hr class="border-gray-600">
                     <!--show more-->
@@ -313,6 +299,67 @@
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.3.2/firebase-messaging.js"></script>
+    <script>
+        var firebaseConfig = {
+
+            apiKey: "AIzaSyDR6TqI2WLAVfIvZNtdlcudq5MawBwF8hE",
+            authDomain: "twitter-bbed3.firebaseapp.com",
+            projectId: "twitter-bbed3",
+            storageBucket: "twitter-bbed3.appspot.com",
+            messagingSenderId: "945923383380",
+            appId: "1:945923383380:web:0021361abaed4cc5334dc1",
+            measurementId: "G-2C7CJ31V8H"
+
+        };
+        firebase.initializeApp(firebaseConfig);
+        const messaging = firebase.messaging();
+
+        function startFCM() {
+            messaging
+                .requestPermission()
+                .then(function() {
+                    return messaging.getToken()
+                })
+                .then(function(response) {
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+                    $.ajax({
+                        url: '{{ route('store.token') }}',
+                        type: 'POST',
+                        data: {
+                            token: response,
+                            _token: "{{ csrf_token() }}"
+                        },
+                        dataType: 'JSON',
+                        success: function(response) {
+
+                        },
+                        error: function(error) {
+                            alert(error);
+                        },
+                    });
+                }).catch(function(error) {
+                    alert(error);
+                });
+        }
+        startFCM();
+        messaging.onMessage(function(payload) {
+            const title = payload.notification.title;
+            const options = {
+                body: payload.notification.body,
+                icon: payload.notification.icon,
+            };
+            new Notification(title, options);
+        });
+    </script>
 </body>
 
 </html>

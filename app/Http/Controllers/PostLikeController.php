@@ -11,31 +11,34 @@ use Illuminate\Support\Facades\Mail;
 use App\Models\User;
 use App\Notifications\LikeTweet;
 use Illuminate\Support\Facades\Event;
-
+use App\Services\FCMService;
 class PostLikeController extends Controller
 {
     public function __construct(){
         $this->middleware(['auth']);
     }
-    public function store(Post $post ,Request $request){
-        // dd($post->id);
-       $result=auth()->user()->likes()->toggle($post->id);
-    if(count($result['attached']) && $post->user_id !== auth()->user()->id){
-        $post->user->notify(new LikeTweet($post,auth()->user()));
-         
-   
-    }
-    if ($result['attached'] ) {
-        // Dispatch the PodcastProcessed event for real-time notification
-        event(new PodcastProcessed($post, auth()->user()));
+  public function store(Post $post) {
+  
+    $result = auth()->user()->likes()->toggle($post->id);
+    if (count($result['attached']) && $post->user_id !== auth()->user()->id) {
+        $post->user->notify(new LikeTweet($post, auth()->user()));
+       
+
+            $user = $post->user;
+
+        
+        FCMService::send(
+            $user->fcm_token,
+            [
+                'title' =>auth()->user()->name,
+                'body' =>'has liked your post'
+            ]
+        );
     }
 
-       
-        // if (!$post->likes()->onlyTrashed()->where('user_id', $request->user()->id)->count()) {
-        //     Mail::to($post->user)->send(new MailUser($post->auth()->user(), $post));
-        // }
-        return back();
+    return back();
 }
+
    
 // public function destroy(Post $post, Request $request)
 // {

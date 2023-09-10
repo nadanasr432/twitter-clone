@@ -98,7 +98,7 @@ class User extends Authenticatable
         // avatar_url
         $avatar = $this->images()->where('type', 'avatar')->first();
         if (!$avatar) {
-            return asset('default_avatar.png');
+            return asset('images/default_avatar.png');
         }
         return asset('images/' . $avatar->src);
     }

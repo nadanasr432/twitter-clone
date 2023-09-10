@@ -34,9 +34,7 @@
                 <div class="flex-1 px-2 pt-2 mt-2">
                     <textarea name="body" id="body" class=" bg-transparent text-gray-400 font-medium text-lg w-full" rows="2"
                         cols="50" placeholder="What's happening?"></textarea>
-                    @error('body')
-                        {{ $message }}
-                    @enderror
+
                 </div>
                 <!--middle creat tweet below icons-->
                 <div class="flex">

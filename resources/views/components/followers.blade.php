@@ -6,7 +6,7 @@
             <div class="flex-1 ">
                 <div class="flex items-center w-48">
                     <div>
-                        <img class="inline-block h-10 w-auto rounded-full ml-4 mt-2" src="{{ $user->avatar_url }}"
+                        <img class="inline-block h-10 w-10 rounded-full ml-4 mt-2" src="{{ $user->avatar_url }}"
                             alt="">
                     </div>
                     <div class="ml-3 mt-3">
@@ -59,4 +59,3 @@
     </li>
 
 </ul>
-

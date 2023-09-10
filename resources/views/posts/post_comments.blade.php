@@ -2,14 +2,6 @@
 
 @section('content')
 
-    {{-- <form method="POST" action="{{ route('post.comments.store', $post) }}">
-        @csrf
-        <div class="form-group">
-            <label for="comment">Your Comment</label>
-            <textarea name="comment" id="comment" class="form-control" rows="4"></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit Comment</button>
-    </form> --}}
 
     <div class="flex">
         <div class="flex-1 m-2">
@@ -30,6 +22,19 @@
     </div>
 
     <hr class="border-gray-600">
+    <!--middle creat tweet-->
+
+    <x-post :post="$post" />
+
+    @if ($post->comments->count() > 0)
+        <ul>
+            @foreach ($post->comments as $reply)
+                <x-post :post="$reply" />
+            @endforeach
+        </ul>
+    @else
+        <p>No comments yet..</p>
+    @endif
     <!--middle creat tweet-->
     <div class="flex">
         <div class="m-2 w-10 py-1">
@@ -119,15 +124,4 @@
             </form>
         @endauth
     </div>
-    <x-post :post="$post" />
-
-    @if ($post->comments->count() > 0)
-        <ul>
-            @foreach ($post->comments as $reply)
-                <x-post :post="$reply" />
-            @endforeach
-        </ul>
-    @else
-        <p>No comments yet..</p>
-    @endif
 @endsection

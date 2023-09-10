@@ -26,9 +26,7 @@
     <div>
         <div class="w-full bg-cover bg-no-repeat bg-center" style="height: 200px;">
 
-            <img class=" w-full h-full"
-                src="{{ asset('images/' .auth()->user()->images()->where('type', 'header')?->first()?->src) }}"
-                alt="">
+            <img class=" w-full h-full" src="{{ asset('images/' . auth()->user()->avatar_url) }}" alt="">
 
         </div>
         <div class="p-4">
@@ -39,8 +37,7 @@
                         <div style="height:9rem; width:9rem;" class="md rounded-full relative avatar">
                             {{-- @foreach ($user->images as $image) --}}
                             <img style="height:9rem; width:9rem;" class="md rounded-full relative border-4 border-gray-900"
-                                src="{{ asset('images/' .auth()->user()->images()->where('type', 'avatar')->first()?->src) }}"
-                                alt="">
+                                src="{{ asset('images/' . auth()->user()->avatar_url) }}" alt="">
                             {{-- @endforeach --}}
                             <div class="absolute"></div>
                         </div>
