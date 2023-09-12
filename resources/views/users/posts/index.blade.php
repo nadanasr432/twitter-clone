@@ -17,7 +17,7 @@
             </div>
             <div class="mx-2">
                 <h2 class="mb-0 text-xl font-bold text-white">{{ $user->name }}</h2>
-                <p class="mb-0 w-48 text-xs text-gray-400">{{ $posts->count() }} Tweets</p>
+                <p class="mb-0 w-48 text-xs text-gray-400">{{ $posts->count() }} {{ __('frontPage.Tweets') }}</p>
             </div>
         </div>
 
@@ -50,14 +50,14 @@
                     @if (auth()->user()->id == $user->id)
                         <a href="{{ route('profile.edit', $user) }}"
                             class="flex justify-center  max-h-max whitespace-nowrap focus:outline-none  focus:ring  rounded max-w-max border bg-transparent border-blue-500 text-blue-500 hover:border-blue-800 hover:border-blue-800 flex items-center hover:shadow-lg font-bold py-2 px-4 rounded-full mr-0 ml-auto">
-                            Edit Profile
+                            {{ __('frontPage.Edit Profile') }}
                         </a>
                     @elseif (!auth()->user()->isFollowing($user))
                         <form action="{{ route('profile.follower', $user) }}" method="post">
                             @csrf
                             <button type="submit"
                                 class="flex justify-center  max-h-max whitespace-nowrap focus:outline-none  focus:ring  rounded max-w-max border bg-transparent border-blue-500 text-blue-500 hover:border-blue-800 hover:border-blue-800 flex items-center hover:shadow-lg font-bold py-2 px-4 rounded-full mr-0 ml-auto">
-                                Follow
+                                {{ __('frontPage. Follow') }}
                             </button>
                         </form>
                     @else
@@ -65,7 +65,7 @@
                             @csrf
                             <button type="submit"
                                 class="flex justify-center  max-h-max whitespace-nowrap focus:outline-none  focus:ring  rounded max-w-max border bg-transparent border-blue-500 text-blue-500 hover:border-blue-800 hover:border-blue-800 flex items-center hover:shadow-lg font-bold py-2 px-4 rounded-full mr-0 ml-auto">
-                                UnFollow
+                                {{ __('frontPage. unfollow') }}
                             </button>
 
                         </form>

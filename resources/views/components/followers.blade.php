@@ -29,7 +29,7 @@
                         @csrf
                         <button type="submit"
                             class="bg-transparent hover:bg-blue-500 text-white font-semibold hover:text-white py-2 px-4 border border-white hover:border-transparent rounded-full">
-                            unfollow
+                            {{ __('frontPage. unfollow') }}
                         </button>
                     </form>
                 @else
@@ -38,7 +38,7 @@
                             @csrf
                             <button type="submit"
                                 class="bg-transparent hover:bg-blue-500 text-white font-semibold hover:text-white py-2 px-4 border border-white hover:border-transparent rounded-full">
-                                pending
+                                {{ __('frontPage.pending') }}
                             </button>
                         </form>
                     @else
@@ -46,7 +46,7 @@
                             @csrf
                             <button type="submit"
                                 class="bg-transparent hover:bg-blue-500 text-white font-semibold hover:text-white py-2 px-4 border border-white hover:border-transparent rounded-full">
-                                Follow
+                                {{ __('frontPage. Follow') }}
                             </button>
                         </form>
                     @endif

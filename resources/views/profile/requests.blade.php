@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
     @if (count(auth()->user()->requests) > 0)
-        <p>Total follow requests: {{ $users->count() > 0 }}</p>
+        <p>{{ __('frontPage.Total follow requests') }}: {{ $users->count() > 0 }}</p>
 
         <ul class="flex flex-col divide-y w-full">
             @foreach (auth()->user()->requests as $user)
@@ -31,7 +31,7 @@
                                 @csrf
                                 <button type="submit"
                                     class="bg-transparent hover:bg-blue-500 text-white font-semibold hover:text-white py-2 px-4 border border-white hover:border-transparent rounded-full">
-                                    Accept
+                                    {{ __('frontPage.Accept') }}
                                 </button>
                             </form>
 

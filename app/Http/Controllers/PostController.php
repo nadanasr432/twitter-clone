@@ -16,16 +16,19 @@ class PostController extends Controller
         $this->middleware(['auth']);
     }
     
-    public function index()
+    public function index(Request $request)
     {
         $followingId = auth()->user()->followings()->pluck('id')->toArray();
         $followingId[] = auth()->user()->id;
 
-        $posts = Post::latest()->whereIn('user_id',$followingId)->get();
-      
+       $posts = Post::latest()->whereIn('user_id',$followingId)->get();
        
+       $locale = $request->session()->get('locale') ?? 'en';
+        app()->setLocale($locale);
+
         return view('posts.index', [
-            'posts' => $posts
+            'posts' => $posts,
+            'locale'=>$locale
         ]);
     }
 

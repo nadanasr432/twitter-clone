@@ -5,7 +5,7 @@
 
     <div class="flex">
         <div class="flex-1 m-2">
-            <h2 class="px-4 py-2 text-xl font-semibold text-white">Comments</h2>
+            <h2 class="px-4 py-2 text-xl font-semibold text-white">{{ __('frontPage.Comments') }}</h2>
         </div>
         <div class="flex-1 px-4 py-2 m-2">
             <a href=""
@@ -33,7 +33,7 @@
             @endforeach
         </ul>
     @else
-        <p>No comments yet..</p>
+        <p>{{ __('frontPage.No comments yet..') }}</p>
     @endif
     <!--middle creat tweet-->
     <div class="flex">
