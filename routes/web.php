@@ -14,7 +14,7 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\UserNotificationsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\RegisterController;
-
+use App\Http\Controllers\PostRetweetController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -58,7 +58,8 @@ Route::get('/posts', [PostController::class, 'index'])->name('posts');
 Route::get('/posts/{post}',[PostController::class, 'show'])->name('posts.show');
 Route::post('/posts', [PostController::class, 'store']);
 Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
-Route::post('/posts/{post}/likes', [PostLikeController::class, 'store'])->name('posts.likes');
+Route::post('/post/likes', [PostLikeController::class, 'store'])->name('posts.likes');
+Route::post('/post/retweets', [PostRetweetController::class, 'store'])->name('posts.retweets');
 Route::get('/requests',[UsersController::class,'ShowRequests'])->name('user.requests');
 Route::post('accepts/{user}', [FollowerController::class, 'acceptFollowRequest'])->name('user.accept');
 Route::get('/follow-requests', [FollowerController::class, 'ShowFollowRequests'])->name('follow-requests');

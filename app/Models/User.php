@@ -67,6 +67,14 @@ class User extends Authenticatable
     public function isLike($post) {
         return $this->likes()->where('post_id', $post->id)->exists();
     }
+    public function retweets()
+    {
+        return $this->belongsToMany(Post::class,'retweets', 'user_id', 'post_id'); // OneTo Many has many child
+    }
+    
+    public function isRetweet($post) {
+        return $this->retweets()->where('post_id', $post->id)->exists();
+    }
    
    
     //access many Like Through Post   

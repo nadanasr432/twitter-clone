@@ -17,9 +17,10 @@ class PostLikeController extends Controller
     public function __construct(){
         $this->middleware(['auth']);
     }
-  public function store(Post $post) {
-  
-    $result = auth()->user()->likes()->toggle($post->id);
+  public function store(Request $request) {
+        $post = Post::findOrFail($request->post_id);
+        // dd($post->id);
+        $result = auth()->user()->likes()->toggle($post->id);
     if (count($result['attached']) && $post->user_id !== auth()->user()->id) {
         $post->user->notify(new LikeTweet($post, auth()->user()));
        
@@ -35,8 +36,13 @@ class PostLikeController extends Controller
             ]
         );
     }
+        
 
-    return back();
+    return response()->json([
+      'status'=>'success',
+      'count'=> count($post->likes),
+      'isLike'=>count($result['attached'])
+    ]);
 }
 
    

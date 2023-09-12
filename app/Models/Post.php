@@ -20,17 +20,24 @@ class Post extends Model
     {
          return $this->likes->contains('user_id', $user->id);
      }
-
+      public function likes()
+     {
+       return $this->belongsToMany(User::class,'likes','post_id','user_id',);//many to many
+    }
+     public function retweetedBy(User $user)
+    {
+         return $this->retweets->contains('user_id', $user->id);
+     }
+      public function retweets()
+     {
+       return $this->belongsToMany(User::class,'retweets','post_id','user_id',);//many to many
+    }
+     
     public function user()
     {
        return $this->belongsTo(User::class);
    }
 
-     public function likes()
-     {
-       return $this->belongsToMany(User::class,'likes','user_id','post_id',);//many to many
-    }
-    
     public function images(){
         return $this->morphMany(Images::class,'imageable');
     }

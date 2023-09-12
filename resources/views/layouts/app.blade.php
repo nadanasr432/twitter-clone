@@ -42,7 +42,9 @@
         @vite('resources/css/app.css')
 
         <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet" />
-
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+            integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     </head>
 
 <body class="bg-gray-200">
@@ -366,6 +368,56 @@
             };
             new Notification(title, options);
         });
+
+        $(document).on('click', '.submit', function() {
+            const post_id = $(this).data('post-id');
+            const button = $(this);
+            $.ajax({
+
+                url: '{{ route('posts.likes') }}',
+                type: 'POST',
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    'post_id': post_id
+                },
+                success: function(response) {
+                    console.log(response);
+                    button.parent().find('.like_count').text(response.count)
+
+                    if (response.isLike == 1) {
+                        button.css("color", "red");
+                    } else {
+                        button.css("color", "white");
+                    }
+
+                },
+
+            })
+        })
+        $(document).on('click', '.submit1', function() {
+            const post_id = $(this).data('post-id');
+            const button = $(this);
+            $.ajax({
+
+                url: '{{ route('posts.retweets') }}',
+                type: 'POST',
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    'post_id': post_id
+                },
+                success: function(response) {
+                    button.parent().find('.retweet_count').text(response.count)
+
+                    if (response.isLike == 1) {
+                        button.css("color", "green");
+                    } else {
+                        button.css("color", "white");
+                    }
+
+                },
+
+            })
+        })
     </script>
 </body>
 

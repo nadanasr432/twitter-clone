@@ -38,63 +38,41 @@
                             stroke-width="2" stroke="currentColor" viewBox="0 0 24 24">
                             <path
                                 d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
-                            </path> <span> {{ $post->comments->count() }}</span>
+                            </path>
                         </svg>
+                        <span> {{ $post->comments->count() }}</span>
                     </a>
 
-                </div>
-
-                <div class="flex-1 text-center py-2 m-2">
-                    <a href="#"
-                        class="w-12 mt-1 group flex items-center text-gray-500 px-3 py-2 text-base leading-6 font-medium rounded-full hover:bg-blue-800 hover:text-blue-300">
-                        <svg class="text-center h-7 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round"
-                            stroke-width="2" stroke="currentColor" viewBox="0 0 24 24">
-                            <path d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
-                        </svg>
-                    </a>
                 </div>
 
                 <div
                     class="flex-1 flex items-center text-white text-xs text-gray-400 hover:text-red-600 transition duration-350 ease-in-out">
-                    {{-- @dump(
-                        auth()->user()->isLike($post)
-                    ) --}}
-
-                    @if (!auth()->user()->isLike($post))
-                        {{-- @if (!$post->likes(auth()->user())) --}}
-                        <form
-                            class="w-12 mt-1 group flex items-center text-gray-500 px-3 py-2 text-base leading-6 font-medium rounded-full hover:bg-blue-800 hover:text-blue-300"
-                            action="{{ route('posts.likes', $post) }}" method="post" class="mr-1">
-                            @csrf
-                            <button type="submit"> <svg class="text-center h-6 w-6" fill="currentColor"
-                                    stroke-linecap="round" viewBox="0 0 24 24">
-                                    <g>
-                                        <path
-                                            d="M12 21.638h-.014C9.403 21.59 1.95 14.856 1.95 8.478c0-3.064 2.525-5.754 5.403-5.754 2.29 0 3.83 1.58 4.646 2.73.814-1.148 2.354-2.73 4.645-2.73 2.88 0 5.404 2.69 5.404 5.755 0 6.376-7.454 13.11-10.037 13.157H12zM7.354 4.225c-2.08 0-3.903 1.988-3.903 4.255 0 5.74 7.034 11.596 8.55 11.658 1.518-.062 8.55-5.917 8.55-11.658 0-2.267-1.823-4.255-3.903-4.255-2.528 0-3.94 2.936-3.952 2.965-.23.562-1.156.562-1.387 0-.014-.03-1.425-2.965-3.954-2.965z">
-                                        </path>
-                                    </g>
-                                </svg></button>
-                        </form>
-                    @else
-                        <form
-                            class="w-12 mt-1 group flex items-center text-gray-500 px-3 py-2 text-base leading-6 font-medium rounded-full hover:bg-blue-800 hover:text-blue-300"
-                            action="{{ route('posts.likes', $post) }}" method="post" class="mr-1">
-                            @csrf
-                            <button type="submit"> <svg class="text-center h-6 w-6" fill="red"
-                                    stroke-linecap="round" viewBox="0 0 24 24">
-                                    <g>
-                                        <path
-                                            d="M12 21.638h-.014C9.403 21.59 1.95 14.856 1.95 8.478c0-3.064 2.525-5.754 5.403-5.754 2.29 0 3.83 1.58 4.646 2.73.814-1.148 2.354-2.73 4.645-2.73 2.88 0 5.404 2.69 5.404 5.755 0 6.376-7.454 13.11-10.037 13.157H12zM7.354 4.225c-2.08 0-3.903 1.988-3.903 4.255 0 5.74 7.034 11.596 8.55 11.658 1.518-.062 8.55-5.917 8.55-11.658 0-2.267-1.823-4.255-3.903-4.255-2.528 0-3.94 2.936-3.952 2.965-.23.562-1.156.562-1.387 0-.014-.03-1.425-2.965-3.954-2.965z">
-                                        </path>
-                                    </g>
-                                </svg> </button>
-                        </form>
-                    @endif
-                    <p>{{ $post->likesBB }}
-                    </p>
-
-
+                    <button type="button" class='submit1' data-post-id="{{ $post->id }}"
+                        style="color: {{ auth()->user()->isRetweet($post)? 'green': 'white' }}">
+                        <svg class="text-center h-7 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="2" stroke="currentColor" viewBox="0 0 24 24">
+                            <path d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+                        </svg>
+                    </button>
+                    <span class="retweet_count">{{ count($post->retweets) }} </p>
                 </div>
+
+                <div
+                    class="flex-1 flex items-center text-white text-xs text-gray-400 hover:text-red-600 transition duration-350 ease-in-out">
+                    <button type="button" class='submit' data-post-id="{{ $post->id }}"
+                        style="color: {{ auth()->user()->isLike($post)? 'red': 'white' }}">
+                        <svg class="text-center h-6 w-6" fill="currentColor" stroke-linecap="round" viewBox="0 0 24 24">
+                            <g>
+                                <path
+                                    d="M12 21.638h-.014C9.403 21.59 1.95 14.856 1.95 8.478c0-3.064 2.525-5.754 5.403-5.754 2.29 0 3.83 1.58 4.646 2.73.814-1.148 2.354-2.73 4.645-2.73 2.88 0 5.404 2.69 5.404 5.755 0 6.376-7.454 13.11-10.037 13.157H12zM7.354 4.225c-2.08 0-3.903 1.988-3.903 4.255 0 5.74 7.034 11.596 8.55 11.658 1.518-.062 8.55-5.917 8.55-11.658 0-2.267-1.823-4.255-3.903-4.255-2.528 0-3.94 2.936-3.952 2.965-.23.562-1.156.562-1.387 0-.014-.03-1.425-2.965-3.954-2.965z">
+                                </path>
+                            </g>
+                        </svg>
+                    </button>
+
+                    <span class="like_count">{{ count($post->likes) }} </p>
+                </div>
+
                 <div class="flex-1 text-center py-2 m-2">
                     <a href="#"
                         class="w-12 mt-1 group flex items-center text-gray-500 px-3 py-2 text-base leading-6 font-medium rounded-full hover:bg-blue-800 hover:text-blue-300">
@@ -132,6 +110,5 @@
 
 
     </div>
-
 </div>
 <hr class="border-gray-600">
