@@ -406,9 +406,10 @@
                     'post_id': post_id
                 },
                 success: function(response) {
+
                     button.parent().find('.retweet_count').text(response.count)
 
-                    if (response.isLike == 1) {
+                    if (response.isRetweet == 1) {
                         button.css("color", "green");
                     } else {
                         button.css("color", "white");

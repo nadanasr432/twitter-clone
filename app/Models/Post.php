@@ -15,7 +15,10 @@ class Post extends Model
         'user_id',
         'parent_id'
     ];
-
+    public function quotedPost()
+    {
+        return $this->belongsTo(Post::class, 'quoted_post_id');
+    }
      public function likedBy(User $user)
     {
          return $this->likes->contains('user_id', $user->id);

@@ -19,7 +19,7 @@ class PostRetweetController extends Controller
     return response()->json([
       'status'=>'success',
       'count'=> count($post->retweets),
-       'isLike'=>count($result['attached'])
+      'isRetweet'=>count($result['attached'])
     ]);
     }
 }

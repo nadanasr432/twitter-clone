@@ -67,6 +67,9 @@ Route::get('/follow-requests', [FollowerController::class, 'ShowFollowRequests']
 // Route::get('/comments', [PostController::class, 'parentReplies'])->name('posts.replies');
 Route::post('/comment/{post}/comment',[PostController::class,'storeComment'])->name('post.comments.store');
 Route::get('/comments/{post}/comments', [PostController::class,'showComments'])->name('post.comments.show');
+Route::post('/quot',[PostController::class,'storeQuote'])->name('post.quotes.store');
+
+Route::get('/quots/{post}/quots', [PostController::class,'showQuots'])->name('post.quots.show');
 Route::get('/dashboard',[DashboardController::class,'index'])->name('dashboard')->withoutMiddleware([Authenticate::class]);
 Route::post('/logout',[LogoutController::class,'store'])->name('logout')->withoutMiddleware([Authenticate::class]);
 Route::get('PostImages/{id}', [PostController::class, 'PostImage']);

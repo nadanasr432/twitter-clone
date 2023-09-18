@@ -9,42 +9,48 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Notifications\NewCommentNotification;
 use App\Services\FCMService;
+
 class PostController extends Controller
 {
     public function __construct()
     {
         $this->middleware(['auth']);
     }
-    
+
     public function index(Request $request)
     {
         $followingId = auth()->user()->followings()->pluck('id')->toArray();
         $followingId[] = auth()->user()->id;
 
-       $posts = Post::latest()->whereIn('user_id',$followingId)->get();
-       
-       $locale = $request->session()->get('locale') ?? 'en';
+        $posts = Post::latest()->whereIn('user_id', $followingId)->get();
+
+        $locale = $request->session()->get('locale') ?? 'en';
         app()->setLocale($locale);
 
         return view('posts.index', [
             'posts' => $posts,
-            'locale'=>$locale
+            'locale' => $locale
         ]);
     }
 
-    public function show(Post $post,$hashtag)
+    public function show(Post $post, $hashtag,$id)
     {
+          
+    $quotePost = Post::findOrFail($id);
+    $originalPost = Post::find($quotePost->quoted_post_id);
         return view('posts.show', [
             'post' => $post,
-            'hashtag' => $hashtag
+            'hashtag' => $hashtag,
+            'quotePost'=>$quotePost,
+            'originalPost'=>$originalPost
         ]);
     }
 
-    public function store(Request $request )
+    public function store(Request $request)
     {
         $this->validate($request, [
-            'body'=>'nullable', 
-            'parent_id'=>'nullable'
+            'body' => 'nullable',
+            'parent_id' => 'nullable'
         ]);
         $post = $request->user()->posts()->create($request->only('body'));
         if ($request->src) {
@@ -52,57 +58,58 @@ class PostController extends Controller
             $request->src->move(public_path('images'), $imageName);
             $post->images()->create([
                 'src' => $imageName,
-                'user_id'=> auth()->id()
+                'user_id' => auth()->id()
             ]);
         }
-          
+
         preg_match_all('/#(\w+)/', $post->body, $hashtags);
 
         foreach ($hashtags[1] as $hashtag) {
-       
+
             $existingHashtag = Hashtag::firstOrCreate(['name' => $hashtag]);
             $post->hashtags()->attach($existingHashtag->id);
         }
-        
+
         return redirect()->back();
     }
-  
-   public function storeComment(Request $request, Post $post)
-{
-    $user_id = Auth::id();
-    // Create a new comment instance
-    $comment = new Post([
-        'user_id' => $user_id,
-        'body' => $request->input('comment'),
-        'parent_id'=>$post->id
-        
-    ]);
-    if ($post->user_id !== $user_id) {
-        $post->user->notify(new NewCommentNotification($post, auth()->user()));
-        
+
+    public function storeComment(Request $request, Post $post)
+    {
+        $user_id = Auth::id();
+        // Create a new comment instance
+        $comment = new Post([
+            'user_id' => $user_id,
+            'body' => $request->input('comment'),
+            'parent_id' => $post->id
+
+        ]);
+        if ($post->user_id !== $user_id) {
+            $post->user->notify(new NewCommentNotification($post, auth()->user()));
+
             $user = $post->user;
 
-        
-        FCMService::send(
-            $user->fcm_token,
-            [
-                'title' => auth()->user()->name,
-                'body' => 'has commented your tweet',
-            ]
-        );
+
+            FCMService::send(
+                $user->fcm_token,
+                [
+                    'title' => auth()->user()->name,
+                    'body' => 'has commented your tweet',
+                ]
+            );
+        }
+
+
+        // Associate the comment with the post and save it
+        $post->comments()->save($comment);
+
+        return redirect()->back()->with('success', 'Comment added successfully');
     }
 
+    public function showComments(Post $post)
+    {
+        return view('posts.post_comments', compact('post'));
+    }
     
-    // Associate the comment with the post and save it
-    $post->comments()->save($comment);
-
-    return redirect()->back()->with('success', 'Comment added successfully');
-}
-    
- public function showComments(Post $post)
-{
-    return view('posts.post_comments', compact('post'));
-}
     public function destroy(Post $post)
     {
         $this->authorize('delete', $post);
@@ -115,18 +122,71 @@ class PostController extends Controller
     {
         $posts = Post::all();
         $uniqueHashtags = collect();
-    
+
         foreach ($posts as $post) {
             $hashtagsInBody = [];
             preg_match_all('/#(\w+)/', $post->body, $hashtagsInBody);
             $uniqueHashtags = $uniqueHashtags->merge($hashtagsInBody[1]);
         }
         $uniqueHashtags = $uniqueHashtags->unique();
-        return view('hashtags.show', ['uniqueHashtags' => $uniqueHashtags,'posts'=>$posts]);
+        return view('hashtags.show', ['uniqueHashtags' => $uniqueHashtags, 'posts' => $posts]);
     }
     public function showPostsByHashtag($hashtag)
     {
         $postsWithHashtag = Post::where('body', 'like', '%' . $hashtag . '%')->get();
 
-    return view('hashtags.by_hashtag', ['hashtag' => $hashtag, 'posts' => $postsWithHashtag]);
-}}
+        return view('hashtags.by_hashtag', ['hashtag' => $hashtag, 'posts' => $postsWithHashtag]);
+    }
+    public function storeQuote(Request $request)
+    {
+        $this->validate($request, [
+            'body' => 'nullable',
+            'parent_id' => 'nullable',
+            'quoted_post_id' => 'exists:posts,id'
+
+        ]);
+            $user = Auth::user();
+
+            $post = new Post();
+            $post->user_id = $user->id;
+            $post->body = $request->input('body');
+            $post->quoted_post_id = $request->input('quoted_post_id');
+            $post->save();
+             if ($request->src) {
+            $imageName = time() . "." . $request->src->extension();
+            $request->src->move(public_path('images'), $imageName);
+            $post->images()->create([
+                'src' => $imageName,
+                'user_id' => auth()->id()
+            ]);
+        }
+
+        preg_match_all('/#(\w+)/', $post->body, $hashtags);
+
+        foreach ($hashtags[1] as $hashtag) {
+
+            $existingHashtag = Hashtag::firstOrCreate(['name' => $hashtag]);
+            $post->hashtags()->attach($existingHashtag->id);
+        }
+          $retweet= Post::findOrFail($request->quoted_post_id);
+        
+          auth()->user()->retweets()->attach( $retweet->id);
+   
+        
+        return redirect(route('posts'));
+        } 
+
+       public function showQuots($id)
+      {
+       
+    $quotePost = Post::findOrFail($id);
+    $originalPost = Post::find($quotePost->quoted_post_id);
+
+    return view('posts.post_Quots', compact('quotePost', 'originalPost'));
+      }
+
+}     
+       
+
+
+    

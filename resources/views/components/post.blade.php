@@ -1,7 +1,5 @@
 @props(['post'])
-<!--first tweet start-->
 <div class="flex flex-shrink-0 p-4 pb-0">
-
     <a href="{{ route('users.post', $post->user) }}" class="flex-shrink-0 group block">
         <div class="flex items-center">
             <img class="inline-block h-10 w-10 rounded-full" src="{{ $post->user->avatar_url }}" alt="">
@@ -24,9 +22,46 @@
         @foreach ($post->images ?? [] as $image)
             <img src="{{ asset('images/' . $image->src) }}">
         @endforeach
-
     </p>
+    @php
+        $quotePost = \App\Models\Post::findOrFail($post->id);
+        $originalPost = \App\Models\Post::find($quotePost->quoted_post_id);
+        
+    @endphp
+    @if ($originalPost)
+        <input type="hidden" name="quoted_post_id" value="{{ $originalPost->id }}">
+        <div class="border border-gray-300 p-3 rounded-lg mb-3">
+            <div class="flex flex-shrink-0 p-4 pb-0">
+                <a href="{{ route('users.post', $originalPost->user) }}" class="flex-shrink-0 group block">
+                    <div class="flex items-center">
+                        <img class="inline-block h-10 w-10 rounded-full" src="{{ $originalPost->user->avatar_url }}"
+                            alt="">
+                        <div class="ml-3">
+                            <p class="text-base leading-6 font-medium text-white">
+                                {{ $originalPost->user->name }}
+                                <span
+                                    class="text-sm leading-5 font-medium text-gray-400 group-hover:text-gray-300 transition ease-in-out duration-150">
+                                    {{ $originalPost->created_at->diffForHumans() }}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="pl-16">
+                <p class="text-base width-auto font-medium text-white flex-shrink">
+                    {{ $originalPost->body }}
+                    @foreach ($originalPost->images ?? [] as $image)
+                        <img src="{{ asset('images/' . $image->src) }}">
+                    @endforeach
+                </p>
+            </div>
+        </div>
 
+
+    @endif
+
+    <!-- retweet -->
     <div class="flex">
         <div class="w-full">
 
@@ -47,14 +82,40 @@
 
                 <div
                     class="flex-1 flex items-center text-white text-xs text-gray-400 hover:text-red-600 transition duration-350 ease-in-out">
-                    <button type="button" class='submit1' data-post-id="{{ $post->id }}"
-                        style="color: {{ auth()->user()->isRetweet($post)? 'green': 'white' }}">
-                        <svg class="text-center h-7 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round"
-                            stroke-width="2" stroke="currentColor" viewBox="0 0 24 24">
-                            <path d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
-                        </svg>
-                    </button>
-                    <span class="retweet_count">{{ count($post->retweets) }} </p>
+                    <ul>
+                        <button id="dropdownDefaultButton" data-dropdown-toggle="dropdown1"
+                            style="color: {{ auth()->user()->isRetweet($post)? 'green': 'white' }}">
+                            <svg class="text-center h-7 w-6" fill="none" stroke-linecap="round"
+                                stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path>
+                            </svg>
+                        </button><span class="retweet_count">{{ count($post->retweets) }} </span>
+
+                        <div id="dropdown1"
+                            class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow  dark:bg-gray-700">
+                            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
+                                aria-labelledby="dropdownDefaultButton">
+                                <li
+                                    class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+
+                                    <button type="button" class='submit1' data-post-id="{{ $post->id }}"
+                                        style="color: {{ auth()->user()->isRetweet($post)? 'green': 'white' }}">
+                                        Retweet
+                                    </button>
+
+
+                                <li>
+                                    <a href="{{ route('post.quots.show', $post) }}"
+                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Quote</a>
+                                </li>
+
+                                </li>
+                            </ul>
+
+                        </div>
+
+                    </ul>
+
                 </div>
 
                 <div
@@ -97,8 +158,8 @@
                 <div class="flex-1 text-center py-2 m-2">
                     <a href="#"
                         class="w-12 mt-1 group flex items-center text-gray-500 px-3 py-2 text-base leading-6 font-medium rounded-full hover:bg-blue-800 hover:text-blue-300">
-                        <svg class="text-center h-7 w-6" fill="none" stroke-linecap="round" stroke-linejoin="round"
-                            stroke-width="2" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="text-center h-7 w-6" fill="none" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24">
                             <path
                                 d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
                             </path>
@@ -107,7 +168,6 @@
                 </div>
             </div>
         </div>
-
 
     </div>
 </div>

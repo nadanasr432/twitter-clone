@@ -143,6 +143,7 @@
             <p>There are no posts</p>
         @endif
 
+
         <hr class="border-blue-800 border-4">
     </div>
 @endsection
@@ -152,8 +153,6 @@
             <h2 class="px-4 py-2 text-xl w-48 font-semibold text-white">Who to follow</h2>
         </div>
     </div>
-
-
     <hr class="border-gray-600">
 
     <!--first person who to follow-->
