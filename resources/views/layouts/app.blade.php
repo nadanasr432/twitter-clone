@@ -36,10 +36,13 @@
         <link rel="canonical" href="https://tailwindcomponents.com/component/twitter-clone" itemprop="URL">
 
         <title>{{ __('Twitter') }}</title>
+        
 
         {{-- <link href="https://unpkg.com/tailwindcss@1.4.6/dist/tailwind.min.css" rel="stylesheet"> --}}
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         @vite('resources/css/app.css')
+       
+  
 
         <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
@@ -93,10 +96,10 @@
                             </path>
                         </svg>
                         {{ __('frontPage.Notifications') }}
-                        @if (auth()->user()->unreadNotifications->count() > 0)
+                        {{-- @if (auth()->user()->unreadNotifications->count() > 0)
                             <span id="notifications-count-badge"
                                 class="text-red-400 mx-1">{{ auth()->user()->unreadNotifications->count() }}</span>
-                        @endif
+                        @endif --}}
                     </a>
                     <a href="{{ route('user.requests') }}"
                         class="mt-1 group flex items-center px-2 py-2 text-base leading-6 font-medium rounded-full hover:bg-blue-800 hover:text-blue-300">
@@ -306,6 +309,8 @@
             </div>
         </div>
     </div>
+    @vite('resources/js/app.js')
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"

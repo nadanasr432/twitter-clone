@@ -12,14 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('posts', function (Blueprint $table) {
-              $table->integer('parent_id')->nullable()->change();
+              $table->integer('parent_id')->nullable();
         });
     }
 
     /**
      * Reverse the migrations.
      */
-    public function down(): voids
+    public function down(): void
     {
         Schema::table('posts', function (Blueprint $table) {
             $table->dropColumn('parent_id');

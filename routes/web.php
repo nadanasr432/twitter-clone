@@ -15,6 +15,7 @@ use App\Http\Controllers\UserNotificationsController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\PostRetweetController;
+use Inertia\Inertia;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -79,4 +80,13 @@ Route::patch('/fcm-token', [UserNotificationsController::class, 'saveToken'])->n
 Route::get('/hashtags', [PostController::class, 'showHashtag'])->name('hashtag.show');
 Route::get('posts/by-hashtag/{hashtag}', [PostController::class, 'showPostsByHashtag'])->name('posts.by.hashtag');
 Route::post('/store-token', [HomeController::class, 'storeToken'])->name('store.token');
+
+
 });
+
+Route::get('/Inertia', function () {
+    return Inertia::render('Index');
+});
+Route::get('/get-data', [PostController::class, 'getData']);
+Route::post('/update-data', [PostController::class, 'updateData']);
+

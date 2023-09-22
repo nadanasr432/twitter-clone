@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Notifications\NewCommentNotification;
 use App\Services\FCMService;
+use Inertia\Inertia;
+
+use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {
@@ -16,7 +19,6 @@ class PostController extends Controller
     {
         $this->middleware(['auth']);
     }
-
     public function index(Request $request)
     {
         $followingId = auth()->user()->followings()->pluck('id')->toArray();
@@ -32,7 +34,6 @@ class PostController extends Controller
             'locale' => $locale
         ]);
     }
-
     public function show(Post $post, $hashtag,$id)
     {
           
@@ -70,7 +71,7 @@ class PostController extends Controller
             $post->hashtags()->attach($existingHashtag->id);
         }
 
-        return redirect()->back();
+        return back();
     }
 
     public function storeComment(Request $request, Post $post)
@@ -184,7 +185,45 @@ class PostController extends Controller
 
     return view('posts.post_Quots', compact('quotePost', 'originalPost'));
       }
+      
 
+      public function indexI()
+      {
+          $posts = Post::all(); 
+          return Inertia::render('app', ['posts' => $posts]);
+      }
+      public function getData()
+    {
+        $data = Post::all();
+
+        $formattedData = $data->map(function ($post) {
+            return [
+                'id' => $post->id,
+                'user_id' => $post->user_id,
+                'body' => $post->body,
+                'parent_id' => $post->parent_id,
+                'created_at' => $post->created_at,
+                'updated_at' => $post->updated_at,
+                'quoted_post_id' => $post->quoted_post_id,
+            ];
+        });
+
+        return response()->json($formattedData);
+    }
+    public function updateData(Request $request)
+    {
+        $postData = $request->input('data');
+        foreach ($postData as $data) {
+            $post = Post::find($data['id']);
+            if ($post) {
+                $post->user_id = $data['user_id'];
+                $post->body = $data['body'];
+                $post->save();
+            }
+        }
+        return response()->json(['result' => 'ok', 'message' => 'Data updated successfully']);
+    }
+    
 }     
        
 

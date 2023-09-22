@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('likes', function (Blueprint $table) {
-              $table->bigInteger('post_id')->constrained()->onDelete('cascade')->change();
+              $table->unsignedBigInteger('post_id')->constrained()->onDelete('cascade')->change();
         });
     }
 
