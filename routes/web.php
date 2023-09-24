@@ -89,4 +89,5 @@ Route::get('/Inertia', function () {
 });
 Route::get('/get-data', [PostController::class, 'getData']);
 Route::post('/update-data', [PostController::class, 'updateData']);
+Route::post('/store-data', [PostController::class, 'storeData']);
 

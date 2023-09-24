@@ -223,9 +223,26 @@ class PostController extends Controller
         }
         return response()->json(['result' => 'ok', 'message' => 'Data updated successfully']);
     }
+    public function storeData(Request $request)
+    {
+      
+        $request->validate([
+            'user_id' => 'required',
+            'body' => 'required',
+
+        ]);
+        $post = new Post();
+        $post->user_id = $request->input('user_id');
+        $post->body = $request->input('body');
     
-}     
-       
+        $post->save();
+
+        
+        return response()->json(['message' => 'Post created successfully', 'post' => $post], 201);
+    }
+}
+    
+
 
 
     

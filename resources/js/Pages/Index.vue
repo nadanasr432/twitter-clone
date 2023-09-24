@@ -1,11 +1,10 @@
 <template>
   <div>
     <h1>Data View</h1>
-    <hot-table :key="posts" :data="posts" :settings="hotSettings" @afterChange="handleDataChange"></hot-table>
+    <hot-table :key="posts" :data="posts" :settings="hotSettings" @afterChange="handleDataChange" ></hot-table>
     <div id="example1console">{{ consoleMessage }}</div>
   </div>
 </template>
-
 <script>
 import { ref, onMounted, watch } from 'vue';
 import 'handsontable/dist/handsontable.full.css';
@@ -16,10 +15,18 @@ export default {
   components: {
     HotTable,
   },
-
   setup() {
     const posts = ref([]);
     const consoleMessage = ref('');
+    const newRow = ref({
+      id: null,
+      user_id: '',
+      body: '',
+      parent_id: '',
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      quoted_post_id: '',
+    });
 
     const hotSettings = {
       data: posts,
@@ -38,6 +45,7 @@ export default {
       rowHeaders: true,
       colHeaders: true,
       contextMenu: true,
+      minSpareRows: 1, 
       licenseKey: 'non-commercial-and-evaluation',
     };
 
@@ -65,18 +73,37 @@ export default {
           console.error('Error updating data:', error);
         });
     };
-
     const handleDataChange = (changes, source) => {
       if (source === 'loadData') {
-        return; // Don't save this change
+        return; 
       }
     };
+    const saveNewRow = () => {
+      const newPost = {
+        id: null,
+        user_id: newRow.value.user_id || null,
+        body: newRow.value.body || '',
+        parent_id: newRow.value.parent_id || null,
+        created_at: newRow.value.created_at,
+        updated_at: newRow.value.updated_at,
+        quoted_post_id: newRow.value.quoted_post_id || null,
+      };
 
+      posts.value.push(newPost);
+
+      axios.post('/store-data', newPost)
+        .then(response => {
+          console.log('saved', response.data);
+        })
+        .catch(error => {
+          console.error('error', error);
+        });
+    };
+    
     onMounted(() => {
       fetchData();
     });
 
-    
     watch(posts, () => {
       saveData();
     }, { deep: true });
@@ -86,6 +113,8 @@ export default {
       hotSettings,
       handleDataChange,
       consoleMessage,
+      newRow,
+      saveNewRow, 
     };
   },
 };
