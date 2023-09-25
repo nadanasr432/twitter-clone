@@ -210,36 +210,18 @@ class PostController extends Controller
 
         return response()->json($formattedData);
     }
-    public function updateData(Request $request)
+    public function updateOrCreate(Request $request)
     {
-        $postData = $request->input('data');
-        foreach ($postData as $data) {
-            $post = Post::find($data['id']);
-            if ($post) {
-                $post->user_id = $data['user_id'];
-                $post->body = $data['body'];
-                $post->save();
-            }
+        try {
+            $postData = $request->all();
+             $post=Post::updateOrCreate(['id' => $postData['id']], $postData);
+            
+            return response()->json(['message' => 'Data saved successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Error saving data: ' . $e->getMessage()], 500);
         }
-        return response()->json(['result' => 'ok', 'message' => 'Data updated successfully']);
     }
-    public function storeData(Request $request)
-    {
-      
-        $request->validate([
-            'user_id' => 'required',
-            'body' => 'required',
-
-        ]);
-        $post = new Post();
-        $post->user_id = $request->input('user_id');
-        $post->body = $request->input('body');
     
-        $post->save();
-
-        
-        return response()->json(['message' => 'Post created successfully', 'post' => $post], 201);
-    }
 }
     
 

@@ -1,7 +1,10 @@
 <?php
 
+use App\Models\Post;
+use Inertia\Inertia;
 use App\Http\Middleware\Authenticate;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\ProfileController;
@@ -11,11 +14,9 @@ use App\Http\Controllers\UserPostController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
-use App\Http\Controllers\UserNotificationsController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\PostRetweetController;
-use Inertia\Inertia;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\UserNotificationsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -80,14 +81,16 @@ Route::patch('/fcm-token', [UserNotificationsController::class, 'saveToken'])->n
 Route::get('/hashtags', [PostController::class, 'showHashtag'])->name('hashtag.show');
 Route::get('posts/by-hashtag/{hashtag}', [PostController::class, 'showPostsByHashtag'])->name('posts.by.hashtag');
 Route::post('/store-token', [HomeController::class, 'storeToken'])->name('store.token');
-
-
-});
-
 Route::get('/Inertia', function () {
-    return Inertia::render('Index');
+    $posts = Post::all(); 
+
+    return Inertia::render('Index', ['posts' => $posts]);
 });
 Route::get('/get-data', [PostController::class, 'getData']);
-Route::post('/update-data', [PostController::class, 'updateData']);
+Route::post('/updateOrCreatePost', [PostController::class, 'updateOrCreate']);
 Route::post('/store-data', [PostController::class, 'storeData']);
+
+
+});
+
 

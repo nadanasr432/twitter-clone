@@ -1,13 +1,12 @@
 <template>
   <div>
     <h1>Data View</h1>
-    <hot-table :key="posts" :data="posts" :settings="hotSettings" @afterChange="handleDataChange" ></hot-table>
-    <div id="example1console">{{ consoleMessage }}</div>
+    <hot-table :settings="hotSettings" :afterChange="onAfterChange"></hot-table>
   </div>
 </template>
+
 <script>
-import { ref, onMounted, watch } from 'vue';
-import 'handsontable/dist/handsontable.full.css';
+import 'handsontable/dist/handsontable.full.min.css';
 import { HotTable } from '@handsontable/vue3';
 import axios from 'axios';
 
@@ -15,111 +14,92 @@ export default {
   components: {
     HotTable,
   },
-  setup() {
-    const posts = ref([]);
-    const consoleMessage = ref('');
-    const newRow = ref({
-      id: null,
-      user_id: '',
-      body: '',
-      parent_id: '',
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      quoted_post_id: '',
-    });
-
-    const hotSettings = {
-      data: posts,
-      columns: [
-        { data: 'id', title: 'ID' },
-        { data: 'user_id', title: 'UserId' },
-        { data: 'body', title: 'Body' },
-        { data: 'parent_id', title: 'Parent_id' },
-        { data: 'created_at', title: 'Created At' },
-        { data: 'updated_at', title: 'Updated At' },
-        { data: 'quoted_post_id', title: 'Quoted Post ID' },
-      ],
-      stretchH: 'all',
-      autoWrapRow: true,
-      height: 400,
-      rowHeaders: true,
-      colHeaders: true,
-      contextMenu: true,
-      minSpareRows: 1, 
-      licenseKey: 'non-commercial-and-evaluation',
-    };
-
-    const fetchData = () => {
-      axios.get('/get-data')
-        .then(response => {
-          posts.value = response.data;
-          console.log('Fetched data:', posts.value);
-        })
-        .catch(error => {
-          console.error('Error fetching data:', error);
-        });
-    };
-
-    const saveData = () => {
-      axios.post('/update-data', { data: posts.value })
-        .then(response => {
-          if (response.data.result === 'ok') {
-            consoleMessage.value = 'Data saved';
-          } else {
-            consoleMessage.value = 'Save error';
-          }
-        })
-        .catch(error => {
-          console.error('Error updating data:', error);
-        });
-    };
-    const handleDataChange = (changes, source) => {
-      if (source === 'loadData') {
-        return; 
-      }
-    };
-    const saveNewRow = () => {
-      const newPost = {
-        id: null,
-        user_id: newRow.value.user_id || null,
-        body: newRow.value.body || '',
-        parent_id: newRow.value.parent_id || null,
-        created_at: newRow.value.created_at,
-        updated_at: newRow.value.updated_at,
-        quoted_post_id: newRow.value.quoted_post_id || null,
-      };
-
-      posts.value.push(newPost);
-
-      axios.post('/store-data', newPost)
-        .then(response => {
-          console.log('saved', response.data);
-        })
-        .catch(error => {
-          console.error('error', error);
-        });
-    };
-    
-    onMounted(() => {
-      fetchData();
-    });
-
-    watch(posts, () => {
-      saveData();
-    }, { deep: true });
-
+  props: {
+    posts: Array, 
+  },
+  data() {
     return {
-      posts,
-      hotSettings,
-      handleDataChange,
-      consoleMessage,
-      newRow,
-      saveNewRow, 
+      hotSettings: {
+        data: this.posts.map((post, index) => ({
+          id: post.id,
+          user_id: post.user_id || '1',
+          body: post.body,
+          parent_id: post.parent_id,
+          created_at: post.created_at,
+          updated_at: post.updated_at,
+          quoted_post_id: post.quoted_post_id,
+        })),
+        
+        columns: [
+          { data: 'id', title: 'ID', readOnly: true },
+          { data: 'user_id', title: 'User Id' },
+          { data: 'body', title: 'Body' },
+          { data: 'parent_id', title: 'Parent ID' },
+          { data: 'created_at', title: 'Created At' },
+          { data: 'updated_at', title: 'Updated At' },
+          { data: 'quoted_post_id', title: 'Quoted Post ID' },
+        ],
+        minSpareRows: 5,
+        height: 'auto',
+        width: 'auto',
+        manualRowMove: true,
+        stretchH: 'all',
+        fillHandle: true,
+        autofill: {
+          autoInsertRow: true,
+        },
+        licenseKey: 'non-commercial-and-evaluation',
+      },
     };
+  },
+  
+  methods: {
+    onAfterChange(changes) {
+      if (!Array.isArray(changes)) {
+        console.error('Invalid changes format:', changes);
+        return;
+      }
+
+      for (const [row, prop, oldValue, newValue] of changes) {
+        const postData = {
+          id: this.hotSettings.data[row].id,
+          user_id: this.hotSettings.data[row].user_id , 
+          body: this.hotSettings.data[row].body,
+          parent_id: this.hotSettings.data[row].parent_id,
+          created_at: this.hotSettings.data[row].created_at,
+          updated_at: this.hotSettings.data[row].updated_at,
+          quoted_post_id: this.hotSettings.data[row].quoted_post_id,
+        };
+
+        if(postData.user_id == null){
+          postData.user_id = '1';
+        }
+
+        axios
+          .post('updateOrCreatePost', postData)
+          .then((response) => {
+            if (response.status === 200) {
+              console.log('Data saved successfully.');
+            } else {
+              console.error('Error:', response.data);
+            }
+          })
+          .catch((error) => {
+            console.error('Axios error:', error);
+            console.log(postData);
+          });
+      }
+    }
   },
 };
 </script>
 
-<style scoped>
-/* Add any scoped styles here if needed */
+<style>
+.handsontable {
+  font-size: 20px;
+}
+td {
+  box-shadow: rgba(189, 189, 189, 0.622) 3px 3px 6px 0px inset,
+    rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+}
 </style>

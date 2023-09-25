@@ -10,7 +10,7 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['id','user_id', 'body', 'parent_id'];
+    protected $fillable = ['user_id', 'body', 'parent_id','quoted_post_id'];
     public function quotedPost()
     {
         return $this->belongsTo(Post::class, 'quoted_post_id');
