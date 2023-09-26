@@ -1,5 +1,4 @@
 <?php
-
 use App\Models\Post;
 use Inertia\Inertia;
 use App\Http\Middleware\Authenticate;
@@ -89,7 +88,7 @@ Route::get('/Inertia', function () {
 Route::get('/get-data', [PostController::class, 'getData']);
 Route::post('/updateOrCreatePost', [PostController::class, 'updateOrCreate']);
 Route::post('/store-data', [PostController::class, 'storeData']);
-
+Route::delete('delete-data/{id}', [PostController::class, 'deleteData']);
 
 });
 

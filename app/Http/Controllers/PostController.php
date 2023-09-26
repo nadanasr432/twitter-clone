@@ -215,15 +215,28 @@ class PostController extends Controller
         try {
             $postData = $request->all();
              $post=Post::updateOrCreate(['id' => $postData['id']], $postData);
-            
-            return response()->json(['message' => 'Data saved successfully']);
+             $postId = $post->id;
+             $updatedPost = Post::find($postId);
+            return response()->json(['message' => 'Data saved successfully', 'post' => $updatedPost]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Error saving data: ' . $e->getMessage()], 500);
         }
     }
+    public function deleteData(Request $request, $id)
+    {
+        try {
+            $post = Post::findOrFail($id);
+            $post->delete();
+            return response()->json(['message' => 'Post deleted successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Post not found or could not be deleted'], 404);
+        }
+    }
+    
     
 }
     
+
 
 
 
